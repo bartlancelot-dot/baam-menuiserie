@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>BAAM · Accueil</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/baam/tokens.css">
+<link rel="stylesheet" href="ds/baam/components/bundle.css">
+<script src="ds/baam/components/bundle.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}
+a{color:var(--ink)}a:hover{color:var(--signal)}
+.wrap{max-width:1280px;margin:0 auto;padding-left:clamp(16px,4vw,64px);padding-right:clamp(16px,4vw,64px);box-sizing:border-box}
+.nav-links a{text-decoration:none;font-size:14px;font-weight:500}
+.tbl{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--line)}
+.cfg{position:relative;width:100%;aspect-ratio:6600/3080;touch-action:none;user-select:none}
+.cfg .p{position:absolute;box-sizing:border-box}
+.cfg .box{border:2px solid var(--ink);background:var(--surface-raised)}
+.cfg .plinth{background:var(--line);border:1px solid var(--ink)}
+.cfg .shelf{background:var(--ink);min-height:2px}
+.cfg .tube{background:var(--ink-muted);border-radius:4px;min-height:3px}
+.cfg .cloth{border-radius:6px 6px 3px 3px}
+.cfg .fold{border-radius:2px}
+.cfg .drawer{border:1.5px solid var(--ink);background:var(--surface-raised)}
+.cfg .handle{background:var(--ink);min-height:2px}
+.cfg .floor{position:absolute;left:0;right:0;bottom:0;border-top:2px solid var(--ink)}
+.cfg .hcote{position:absolute;margin-left:28px;border-left:1px solid var(--ink-muted);display:flex;align-items:center}
+.cfg .hcote span{padding-left:8px;font-family:var(--font-mono);font-size:13px;line-height:16px;font-weight:500;color:var(--ink);white-space:nowrap}
+.cfg .wcote{position:absolute;top:calc(100% + 10px);border-top:1px solid var(--ink-muted);padding-top:6px;text-align:center;font-family:var(--font-mono);font-size:13px;line-height:16px;font-weight:500;color:var(--ink);white-space:nowrap}
+.cfg .hdl{position:absolute;width:48px;height:48px;padding:0;border:0;border-radius:0;background:transparent;color:var(--signal);display:flex;align-items:center;justify-content:center;touch-action:none;z-index:2}
+.cfg .hdl svg{width:34px;height:34px;transition:transform .15s}
+.cfg .hdl-x:hover svg{transform:scaleX(1.15)}.cfg .hdl-y:hover svg{transform:scaleY(1.15)}
+.cfg .hdl-x{cursor:ew-resize}.cfg .hdl-y{cursor:ns-resize}
+.cfg .hdl:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.anat{position:relative;width:100%;max-width:780px;margin:0 auto;aspect-ratio:860/653}
+.anat-label{position:absolute;left:58.6%;right:0;transform:translateY(-0.7em);display:flex;flex-direction:column;gap:2px}
+.anat-name{font-size:clamp(12px,2.2vw,18px);font-weight:700;letter-spacing:.04em;line-height:1.2}
+.anat-ref{font-family:var(--font-mono);font-size:clamp(10px,1.5vw,12px);line-height:1.4;color:var(--ink-muted)}
+.anat-legend{display:none}
+@media (max-width:860px){.nav-links{display:none!important}.hide-sm{display:none!important}}
+.hdr{container-type:inline-size}
+.hero-ctas-c{container-type:inline-size}
+.hero-ctas{display:flex;flex-wrap:nowrap;gap:16px;align-items:stretch}
+@container (max-width:520px){.hero-ctas{gap:8px}.hero-ctas>*{flex:1 1 0;min-width:0}.hero-ctas .bm-btn{width:100%;white-space:nowrap;padding-left:10px;padding-right:10px;font-size:13px;overflow:hidden;text-overflow:ellipsis}}
+.burger{display:none;margin-left:auto;width:44px;height:44px;padding:0;border:1px solid var(--line-strong);background:var(--surface-raised);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px}
+.burger span{display:block;width:20px;height:2px;background:var(--ink);transition:transform .2s ease,opacity .2s ease}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}.burger.open span:nth-child(2){opacity:0}.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mnav{display:none;flex-direction:column;border-top:1px solid var(--line)}
+.mnav a.mlink{display:block;padding:16px 0;border-bottom:1px solid var(--line);font-size:17px;font-weight:600;text-decoration:none}
+@container (max-width:860px){.hdr .nav-links{display:none!important}.hdr .hdr-cta{display:none!important}.hdr .burger{display:inline-flex}.hdr .mnav.open{display:flex}}
+</style>
+</helmet>
+<div style="background: var(--surface); color: var(--ink); font-family: var(--font-sans); width: 100%">
+
+<header class="hdr" style="background: var(--surface); border-bottom: 1px solid var(--line)">
+<div class="wrap" style="display: flex; align-items: center; gap: 32px; flex-wrap: wrap; padding-top: 18px; padding-bottom: 18px">
+<a href="#top" aria-label="BAAM, retour à l'accueil" style="display: flex; align-items: center; text-decoration: none; height: 44px">
+<sc-if value="{{hasLogo}}" hint-placeholder-val="{{false}}">
+<img src="{{logo}}" alt="BAAM" style="height: {{logoHeight}}px; width: auto; display: block">
+</sc-if>
+<sc-if value="{{noLogo}}" hint-placeholder-val="{{true}}">
+<span style="font-size: 26px; font-weight: 700; letter-spacing: -0.03em; color: var(--ink)">BAAM</span>
+</sc-if>
+</a>
+<nav class="nav-links" aria-label="Navigation principale" style="display: flex; gap: 28px; margin-left: auto; flex-wrap: wrap">
+<a href="#composants">Le caisson BAAM</a>
+<a href="GrilleTarifaire.dc.html">La grille tarifaire</a>
+<a href="#avantages">Nos engagements</a>
+<a href="#en-situation">Tous nos décors</a>
+</nav>
+<a class="hdr-cta bm-btn bm-btn-primary" href="Configurateur.dc.html" style="text-decoration: none">Configurer un caisson</a>
+<button type="button" class="burger {{menuCls}}" aria-label="Menu" aria-expanded="{{menuExp}}" aria-controls="menu-mobile" onClick="{{toggleMenu}}"><span></span><span></span><span></span></button>
+</div>
+<div class="wrap">
+<nav id="menu-mobile" class="mnav {{menuCls}}" aria-label="Navigation principale">
+<a class="mlink" href="#composants" onClick="{{closeMenu}}">Le caisson BAAM</a>
+<a class="mlink" href="GrilleTarifaire.dc.html">La grille tarifaire</a>
+<a class="mlink" href="#avantages" onClick="{{closeMenu}}">Nos engagements</a>
+<a class="mlink" href="#en-situation" onClick="{{closeMenu}}">Tous nos décors</a>
+<a class="bm-btn bm-btn-primary" href="Configurateur.dc.html" style="text-decoration: none; display: flex; justify-content: center">Configurer un caisson</a>
+</nav>
+</div>
+</header>
+
+<section id="top" style="background: var(--surface); color: var(--ink); border-bottom: 1px solid var(--line)">
+<div class="wrap" style="display: flex; flex-wrap: wrap; gap: 56px; align-items: center; padding-top: clamp(48px,7vw,104px); padding-bottom: 24px">
+<div style="flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 28px">
+<x-import component-from-global-scope="BAAM.Eyebrow">Caissons d'agencement pour les professionnels</x-import>
+<h1 style="margin: 0; font-size: clamp(44px,6vw,80px); line-height: 0.98; font-weight: 700; letter-spacing: -0.035em; color: var(--ink)">La référence,<br>à vos <span style="color: var(--signal)">cotes</span>.</h1>
+<p style="margin: 0; max-width: 34em; font-size: 18px; line-height: 28px; color: var(--ink)">BAAM fabrique des caissons d'agencement à cote libre, montés et prêts à installer en 72 h, à prix catalogue. Vous fournissez la cote, nous garantissons la fabrication.</p>
+<div class="hero-ctas-c">
+<div class="hero-ctas">
+<a class="bm-btn bm-btn-primary" href="Configurateur.dc.html" style="text-decoration: none; display: flex; justify-content: center">Configurer un caisson</a>
+<x-import component-from-global-scope="BAAM.Button" variant="secondary">Grille tarifaire PDF</x-import>
+</div>
+</div>
+<div style="margin-top: 16px">
+<x-import component-from-global-scope="BAAM.KeyFigures" items="{{figures}}"></x-import>
+</div>
+</div>
+</div>
+<div id="dimensions" class="wrap" style="display: flex; flex-direction: column; gap: 32px; padding-bottom: clamp(56px,7vw,104px)">
+<div>
+<div style="display: flex; flex-direction: column; align-items: flex-start; gap: 16px; text-align: left; margin-bottom: 0">
+<h2 style="margin: 0; font-size: clamp(24px,2.6vw,32px); line-height: 1.2; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); text-wrap: balance">Dites-nous en plus sur votre projet.</h2>
+<p style="margin: 0; font-size: 15px; line-height: 22px; font-style: italic; color: var(--ink-muted)">Utilisez les flèches pour dimensionner votre projet.</p>
+<span aria-hidden="true" style="display: block; width: 56px; height: 3px; background: var(--signal)"></span>
+</div>
+<div style="max-width: 1040px; margin: -24px auto 0; padding-bottom: 36px">
+<div class="cfg" ref="{{setBox}}">
+<sc-for list="{{parts}}" as="pt" hint-placeholder-count="12">
+<div class="p {{pt.cls}}" style="{{pt.style}}"></div>
+</sc-for>
+<div class="floor"></div>
+<div class="wcote" style="left: {{xL}}; width: {{wPct}}">{{wLabel}}</div>
+<div class="hcote" style="left: {{xR}}; top: {{yT}}; height: {{hPct}}"><span>{{hLabel}}</span></div>
+<button type="button" class="hdl hdl-x" aria-label="Largeur : {{wLabel}}. Tirez ou utilisez les flèches gauche et droite." onPointerDown="{{dragL}}" onKeyDown="{{keyW}}" style="left: {{xL}}; top: {{yMid}}; transform: translate(-100%, -50%)">
+<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H4M10 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<button type="button" class="hdl hdl-x" aria-label="Largeur : {{wLabel}}. Tirez ou utilisez les flèches gauche et droite." onPointerDown="{{dragR}}" onKeyDown="{{keyW}}" style="left: {{xR}}; top: {{yMid}}; transform: translate(0, -50%)">
+<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<button type="button" class="hdl hdl-y" aria-label="Hauteur : {{hLabel}}. Tirez ou utilisez les flèches haut et bas." onPointerDown="{{dragT}}" onKeyDown="{{keyH}}" style="left: 50%; top: {{yT}}; transform: translate(-50%, -100%)">
+<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 20V4M6 10l6-6 6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+</div>
+</div>
+<div style="display: flex; justify-content: center; margin-top: clamp(16px,2vw,24px)">
+<a class="bm-btn bm-btn-primary" href="Configurateur.dc.html" style="text-decoration: none">Configurer mes caissons</a>
+</div>
+</div>
+</div>
+</section>
+
+<section id="composants" style="background: var(--surface-raised)">
+<div class="wrap" style="display: flex; flex-direction: column; gap: 40px; padding-top: clamp(40px,4vw,56px); padding-bottom: clamp(56px,7vw,112px)">
+<div style="display: flex; flex-direction: column; gap: 16px; align-items: flex-start; text-align: left">
+<div style="display: flex; flex-direction: column; gap: 16px; max-width: 680px">
+<x-import component-from-global-scope="BAAM.Eyebrow" number="01">Anatomie d'un caisson BAAM</x-import>
+<x-import component-from-global-scope="BAAM.Heading" level="{{two}}">Des marques de référence assemblées dans un même corpus.</x-import>
+</div>
+<p style="margin: 0; max-width: 680px; font-size: 15px; line-height: 23px">Chaque caisson est construit à partir des références que vous et vos compagnons connaissez par cœur. Nous assemblons le meilleur dans nos ateliers à des prix catalogue imbattables.</p>
+</div>
+<div>
+<div class="anat">
+<svg viewBox="0 60 860 653" role="img" aria-label="Schéma d'un caisson BAAM : partie haute, néon LED, tablette, penderie, charnières et tiroir" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block">
+<defs>
+<linearGradient id="anat-glow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD27A" stop-opacity="0.55"></stop><stop offset="1" stop-color="#FFD27A" stop-opacity="0"></stop></linearGradient>
+</defs>
+<rect x="60" y="90" width="330" height="593" style="fill: var(--surface-raised); stroke: var(--ink); stroke-width: 3"></rect>
+<rect x="70" y="100" width="310" height="559" style="fill: none; stroke: var(--ink); stroke-width: 2"></rect>
+<rect x="70" y="207" width="310" height="10" style="fill: var(--surface-raised); stroke: var(--ink); stroke-width: 2.5"></rect>
+<g><rect x="76" y="193" width="92" height="14" rx="5" style="fill: #B97A5C"></rect><rect x="78" y="178" width="92" height="14" rx="5" style="fill: #B7795F"></rect><rect x="75" y="163" width="92" height="14" rx="5" style="fill: #4E5E4C"></rect><rect x="80" y="148" width="92" height="14" rx="5" style="fill: #8796AE"></rect><rect x="80" y="133" width="92" height="14" rx="5" style="fill: #6E7F62"></rect><rect x="76" y="118" width="92" height="14" rx="5" style="fill: #5D6B8A"></rect><rect x="181" y="193" width="92" height="14" rx="5" style="fill: #A0687A"></rect><rect x="181" y="178" width="92" height="14" rx="5" style="fill: #A0727E"></rect><rect x="181" y="163" width="92" height="14" rx="5" style="fill: #CDB89A"></rect><rect x="186" y="148" width="92" height="14" rx="5" style="fill: #B97A5C"></rect><rect x="187" y="133" width="92" height="14" rx="5" style="fill: #B7795F"></rect><rect x="290" y="193" width="78" height="14" rx="5" style="fill: #6E7F62"></rect><rect x="287" y="178" width="78" height="14" rx="5" style="fill: #5D6B8A"></rect><rect x="288" y="163" width="78" height="14" rx="5" style="fill: #D9D2C7"></rect><rect x="293" y="148" width="78" height="14" rx="5" style="fill: #A0687A"></rect><rect x="293" y="133" width="78" height="14" rx="5" style="fill: #A0727E"></rect><rect x="290" y="118" width="78" height="14" rx="5" style="fill: #CDB89A"></rect></g>
+<rect x="71" y="223" width="308" height="130" style="fill: url(#anat-glow)"></rect>
+<rect x="82" y="221" width="286" height="6" rx="3" style="fill: #F5B84A"></rect>
+<line x1="80" y1="238" x2="370" y2="238" style="stroke: var(--ink-muted); stroke-width: 6; stroke-linecap: round"></line>
+<rect x="88" y="244" width="18" height="255" rx="9" style="fill: #B7795F"></rect><rect x="120" y="244" width="18" height="225" rx="9" style="fill: #A0727E"></rect><rect x="152" y="244" width="18" height="252" rx="9" style="fill: #5D6B8A"></rect><rect x="184" y="244" width="18" height="288" rx="9" style="fill: #4E5E4C"></rect><rect x="216" y="244" width="18" height="240" rx="9" style="fill: #CDB89A"></rect><rect x="248" y="244" width="18" height="280" rx="9" style="fill: #D9D2C7"></rect><rect x="280" y="244" width="18" height="232" rx="9" style="fill: #8796AE"></rect><rect x="312" y="244" width="18" height="255" rx="9" style="fill: #B97A5C"></rect><rect x="344" y="244" width="18" height="288" rx="9" style="fill: #A0687A"></rect>
+<g style="fill: var(--surface); stroke: var(--ink); stroke-width: 1.5"><rect x="366" y="360" width="10" height="34"></rect><rect x="366" y="470" width="10" height="34"></rect></g>
+<rect x="70" y="555" width="310" height="10" style="fill: var(--surface-raised); stroke: var(--ink); stroke-width: 2.5"></rect>
+<rect x="76" y="571" width="298" height="82" style="fill: var(--surface); stroke: var(--ink); stroke-width: 2"></rect>
+<line x1="185" y1="595" x2="265" y2="595" style="stroke: var(--ink); stroke-width: 5; stroke-linecap: round"></line>
+<rect x="70" y="659" width="310" height="24" style="fill: var(--line); stroke: var(--ink); stroke-width: 2"></rect>
+<sc-for list="{{callouts}}" as="c" hint-placeholder-count="6">
+<path d="{{c.d}}" style="fill: none; stroke: var(--signal); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round"></path>
+</sc-for>
+</svg>
+<sc-for list="{{callouts}}" as="c" hint-placeholder-count="6">
+<div class="anat-label" style="top: {{c.top}}">
+<sc-if value="{{c.hasLogo}}" hint-placeholder-val="{{false}}">
+<img src="{{c.logo}}" alt="{{c.name}}" style="max-height: 24px; max-width: 140px; width: auto; display: block">
+</sc-if>
+<sc-if value="{{c.noLogo}}" hint-placeholder-val="{{true}}">
+<span class="anat-name">{{c.name}}</span>
+</sc-if>
+<span class="anat-ref">{{c.ref}}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+</section>
+
+<section id="prix" style="background: var(--surface)">
+<div class="wrap" style="display: flex; flex-wrap: wrap; gap: 56px; padding-top: clamp(56px,7vw,112px); padding-bottom: clamp(56px,7vw,112px)">
+<div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<x-import component-from-global-scope="BAAM.Eyebrow" number="02">Des tarifs transparents</x-import>
+<x-import component-from-global-scope="BAAM.Heading" level="{{two}}">Un prix clair, ligne par ligne.</x-import>
+<p style="margin: 0; font-size: 16px; line-height: 25px">Le caisson, chaque porte, chaque tablette, chaque tiroir : tout a son prix, affiché avant le devis. Vous ne payez que ce dont votre chantier a besoin, rien de plus.</p>
+<p style="margin: 0; font-size: 14px; line-height: 22px; color: var(--ink-muted)">Tarif professionnel HT 2026. Vantaux, équipements et adaptations dans la grille complète.</p>
+<div>
+<a href="GrilleTarifaire.dc.html" style="font-size: 14px; font-weight: 600; text-decoration: underline; text-decoration-color: var(--signal); text-decoration-thickness: 2px; text-underline-offset: 4px">Voir la grille tarifaire complète →</a>
+</div>
+</div>
+<div style="flex: 2 1 560px; min-width: 0">
+<div style="overflow-x: auto; background: var(--surface-raised); border: 1px solid var(--line)">
+<table class="tbl" style="min-width: 560px">
+<thead>
+<tr style="border-bottom: 2px solid var(--line-strong)">
+<th scope="col" style="font-family: var(--font-mono); font-size: 11px; font-weight: 500; color: var(--ink-muted); border-bottom: 2px solid var(--line-strong)">H \ L (mm)</th>
+<sc-for list="{{widths}}" as="w" hint-placeholder-count="4">
+<th scope="col" style="font-family: var(--font-mono); font-size: 12px; font-weight: 500; border-bottom: 2px solid var(--line-strong)">{{w}}</th>
+</sc-for>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{grid}}" as="r" hint-placeholder-count="5">
+<tr>
+<th scope="row" style="font-family: var(--font-mono); font-size: 12px; font-weight: 500">{{r.h}}</th>
+<sc-for list="{{r.cells}}" as="c" hint-placeholder-count="4">
+<td style="font-size: 17px; font-weight: 700">{{c}}</td>
+</sc-for>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+
+<section id="avantages" style="background: var(--surface-raised); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line)">
+<div class="wrap" style="display: flex; flex-direction: column; gap: 40px; padding-top: clamp(56px,7vw,112px); padding-bottom: clamp(56px,7vw,112px)">
+<div style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
+<x-import component-from-global-scope="BAAM.Eyebrow" number="03">Les quatre piliers</x-import>
+<x-import component-from-global-scope="BAAM.Heading" level="{{two}}">Nos engagements pour mieux vous aider dans vos projets.</x-import>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px">
+<sc-for list="{{pillars}}" as="p" hint-placeholder-count="5">
+<article style="display: flex; flex-direction: column; gap: 8px; border-top: 4px solid {{p.top}}; padding-top: 16px; min-width: 0">
+<span style="font-family: var(--font-mono); font-size: 11px; line-height: 16px; color: {{p.numColor}}">{{p.number}}</span>
+<h3 style="margin: 0; font-size: 18px; line-height: 24px; font-weight: 700; letter-spacing: -0.01em">{{p.title}}</h3>
+<p style="margin: 0; font-size: 14px; line-height: 21px">{{p.text}}</p>
+<p style="margin: 4px 0 0; font-size: 13px; line-height: 20px; font-style: italic; color: var(--ink-muted)">{{p.note}}</p>
+</article>
+</sc-for>
+</div>
+</div>
+</section>
+
+<section id="entre-pros" style="background: var(--surface); border-bottom: 1px solid var(--line)">
+<div class="wrap" style="display: flex; flex-wrap: wrap; gap: 40px 72px; align-items: flex-start; padding-top: clamp(56px,7vw,104px); padding-bottom: clamp(56px,7vw,104px)">
+<div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<h2 style="margin: 0; font-size: clamp(32px,4vw,52px); line-height: 1.05; font-weight: 700; letter-spacing: -0.03em; text-wrap: balance">Entre professionnels, on se <span style="color: var(--signal)">comprend</span>.</h2>
+<p style="margin: 0; font-size: 17px; line-height: 27px; max-width: 34em">Avant de fabriquer des caissons, nous avons été agenceurs. Nous sommes passés par les mêmes chantiers que vous, et c'est pour eux que nous avons construit BAAM.</p>
+</div>
+<ul style="flex: 1 1 420px; min-width: 0; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; border-top: 2px solid var(--line-strong)">
+<sc-for list="{{pains}}" as="pn" hint-placeholder-count="3">
+<li style="display: flex; flex-direction: column; gap: 6px; padding: 18px 0; border-bottom: 1px solid var(--line)">
+<span style="font-size: 16px; line-height: 24px; font-weight: 600">{{pn.pain}}</span>
+<span style="font-size: 14px; line-height: 21px; color: var(--ink-muted)">{{pn.answer}}</span>
+</li>
+</sc-for>
+</ul>
+</div>
+</section>
+
+<section id="en-situation" style="background: var(--surface-raised); border-top: 1px solid var(--line)">
+<div class="wrap" style="display: flex; flex-wrap: wrap; gap: 40px 64px; align-items: center; padding-top: clamp(56px,7vw,104px); padding-bottom: clamp(56px,7vw,104px)">
+<div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<x-import component-from-global-scope="BAAM.Eyebrow" number="04">En situation</x-import>
+<x-import component-from-global-scope="BAAM.Heading" level="{{two}}">Choisissez le décor, voyez le résultat.</x-import>
+<p style="margin: 0; font-size: 16px; line-height: 25px">Plus de 200 décors Egger en panneaux 19 mm, classés par famille. Cliquez sur une teinte pour la voir appliquée au dressing.</p>
+<div role="tablist" aria-label="Famille de décors" style="display: flex; gap: 6px; flex-wrap: wrap">
+<sc-for list="{{famBtns}}" as="f" hint-placeholder-count="4">
+<button type="button" role="tab" aria-selected="{{f.on}}" onClick="{{f.pick}}" style="font: 600 12px/1 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; padding: 9px 12px; border: 1px solid {{f.border}}; background: {{f.bgc}}; color: {{f.fg}}; cursor: pointer">{{f.label}} <span style="opacity: 0.6">{{f.n}}</span></button>
+</sc-for>
+</div>
+<div role="radiogroup" aria-label="Décor" style="display: flex; gap: 8px; flex-wrap: wrap; max-height: {{swMax}}; overflow: hidden; padding: 4px">
+<sc-for list="{{decorBtns}}" as="d" hint-placeholder-count="24">
+<button type="button" role="radio" aria-checked="{{d.on}}" aria-label="{{d.code}} {{d.name}}" onClick="{{d.pick}}" style="width: 34px; height: 34px; flex: none; padding: 0; border: 1px solid var(--line); border-radius: 50%; cursor: pointer; background: {{d.bg}}; outline: {{d.ring}}; outline-offset: 2px" title="{{d.type}} · {{d.code}} · {{d.name}}"></button>
+</sc-for>
+</div>
+<button type="button" onClick="{{toggleMore}}" aria-expanded="{{moreExp}}" style="align-self: flex-start; background: none; border: 0; padding: 0; font: inherit; font-size: 14px; font-weight: 600; color: var(--ink); cursor: pointer; text-decoration: underline; text-decoration-color: var(--signal); text-decoration-thickness: 2px; text-underline-offset: 4px">{{moreLabel}}</button>
+<span style="font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-muted)">{{decorCaption}}</span>
+</div>
+<figure style="flex: 2 1 560px; min-width: 0; margin: 0">
+<svg viewBox="0 0 1024 572" role="img" aria-label="{{photoAlt}}" style="width: 100%; height: auto; display: block; aspect-ratio: 1024 / 572">
+<defs>
+<pattern id="bm-tex" patternUnits="userSpaceOnUse" width="{{sim.pw}}" height="{{sim.ph}}" patternTransform="{{sim.rot}}"><image href="/_blob/c1953859763d6ff50c588126fae72f83" x="{{sim.ix}}" y="{{sim.iy}}" width="{{sim.iw}}" height="{{sim.ih}}" preserveAspectRatio="none"></image></pattern>
+<mask id="bm-mask"><image href="/_blob/80e7c401fc67823c3cc386cd2dd3e2d7" x="0" y="0" width="1024" height="572"></image></mask>
+</defs>
+<image href="{{photo}}" x="0" y="0" width="1024" height="572"></image>
+<g mask="url(#bm-mask)" opacity="{{sim.show}}" style="isolation: isolate">
+<rect x="0" y="0" width="1024" height="572" fill="{{sim.fill}}"></rect>
+<image href="/_blob/0e28e6284229e44e3dba29e73212ca2c" x="0" y="0" width="1024" height="572" style="mix-blend-mode: multiply"></image>
+</g>
+</svg>
+<figcaption style="margin-top: 10px; font-family: var(--font-mono); font-size: 11px; line-height: 16px; color: var(--ink-muted)">{{photoNote}}</figcaption>
+</figure>
+</div>
+</section>
+
+<section id="commander" data-theme="encre" style="background: var(--surface); color: var(--ink)">
+<div class="wrap" style="display: flex; flex-direction: column; gap: 48px; padding-top: clamp(56px,7vw,112px); padding-bottom: clamp(56px,7vw,112px)">
+<div style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
+<x-import component-from-global-scope="BAAM.Eyebrow" number="05">Commander</x-import>
+<x-import component-from-global-scope="BAAM.Heading" level="{{two}}">Du plan au chantier, en quatre étapes.</x-import>
+</div>
+<ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="4">
+<li style="display: flex; flex-direction: column; gap: 10px; border-top: 2px solid var(--line-strong); padding-top: 18px">
+<span style="font-family: var(--font-mono); font-size: 13px; color: var(--ink-muted)">{{s.n}}</span>
+<span style="font-size: 18px; line-height: 24px; font-weight: 700">{{s.title}}</span>
+<span style="font-size: 14px; line-height: 22px; color: var(--ink-muted)">{{s.text}}</span>
+</li>
+</sc-for>
+</ol>
+</div>
+</section>
+
+<footer id="espace-pro" style="background: var(--surface); border-top: 1px solid var(--line)">
+<div class="wrap" style="display: flex; flex-wrap: wrap; gap: 48px; justify-content: space-between; padding-top: 56px; padding-bottom: 40px">
+<div style="display: flex; flex-direction: column; gap: 10px; flex: 1 1 280px">
+<span style="font-size: 26px; font-weight: 700; letter-spacing: -0.03em">BAAM</span>
+<span style="font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-muted)">Caissons d'agencement · Fabrication française</span>
+</div>
+<nav aria-label="Pied de page" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px 40px; flex: 2 1 480px; font-size: 14px">
+<a href="#composants">Le caisson BAAM</a>
+<a href="GrilleTarifaire.dc.html">Grille tarifaire</a>
+<a href="#en-situation">Décors</a>
+<a href="#commander">Commander</a>
+<a href="QuiSommesNous.dc.html">Qui sommes-nous</a>
+<a href="#top">Contact : [TÉLÉPHONE]</a>
+</nav>
+</div>
+<div class="wrap" style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; padding-top: 16px; padding-bottom: 32px; border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: 11px; color: var(--ink-muted)">
+<span>Tarif professionnel HT · prix valables 2026</span>
+<span>[RAISON SOCIALE] · [ADRESSE] · [SIRET]</span>
+</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"logo":{"editor":"text","default":"","section":"Logo"},"logoHeight":{"editor":"int","default":32,"min":16,"max":64,"unit":"px","section":"Logo"},"$preview":{"width":1440,"height":7800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var eur = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' €'; };
+    var C = [[279,319,349,379],[309,349,389,409],[339,379,419,449],[389,429,479,499],[569,639,679,799]];
+    var H = ['800–1200','1201–1600','1601–2000','2001–2200','2201–2500'];
+    var compo = [
+      { label: 'DR-C caisson 1000 × 2060', value: eur(479) },
+      { label: 'DR-S sur-caisson 1000 × 330', value: eur(159) },
+      { label: 'DR-V 2 vantaux 500 × 2390', value: eur(238) },
+      { label: 'Séparateur vertical', value: eur(79) },
+      { label: 'Tablettes × 4 et perçages', value: eur(135) },
+      { label: 'Penderie tube alu 0,47 ml', value: eur(28) },
+      { label: 'Tiroirs Blum Merivobox × 2', value: eur(246) },
+      { label: 'Néon LED 3000 K, bandeau 1 ml', value: eur(183) }
+    ];
+    var st = this.state || {}, self = this;
+    var W = st.W || 2400, Hh = st.H || 2480;
+    var clampW = function (v) { return Math.max(600, Math.min(6000, Math.round(v / 10) * 10)); };
+    var clampH = function (v) { return Math.max(1600, Math.min(2900, Math.round(v / 10) * 10)); };
+    var WM = 6600, HM = 3080;
+    var drag = function (mode) {
+      return function (e) {
+        var box = self.box; if (!box) return;
+        e.preventDefault();
+        var r = box.getBoundingClientRect(), k = WM / r.width, cx = r.left + r.width / 2;
+        var move = function (ev) {
+          if (mode === 'R') self.setState({ W: clampW((ev.clientX - cx) * 2 * k) });
+          else if (mode === 'L') self.setState({ W: clampW((cx - ev.clientX) * 2 * k) });
+          else self.setState({ H: clampH((r.bottom - ev.clientY) * k) });
+        };
+        var up = function () { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up); };
+        window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
+      };
+    };
+    var keyW = function (e) { var d = e.key === 'ArrowRight' || e.key === 'ArrowUp' ? 100 : e.key === 'ArrowLeft' || e.key === 'ArrowDown' ? -100 : 0; if (d) { e.preventDefault(); self.setState({ W: clampW(W + d) }); } };
+    var keyH = function (e) { var d = e.key === 'ArrowUp' || e.key === 'ArrowRight' ? 50 : e.key === 'ArrowDown' || e.key === 'ArrowLeft' ? -50 : 0; if (d) { e.preventDefault(); self.setState({ H: clampH(Hh + d) }); } };
+    var n = Math.max(1, Math.ceil(W / 1000)), base = Math.floor(W / n), widths = [];
+    for (var i = 0; i < n; i++) widths.push(base + (i < W - base * n ? 1 : 0));
+    var Hs = 0, Hc = Hh;
+    if (Hh > 2200) { Hs = Math.min(800, Math.max(300, Hh - 2000)); Hc = Hh - Hs; if (Hc > 2500) { Hc = 2500; Hs = Hh - 2500; } }
+    var S = [[129,149,159,179],[139,159,179,199],[159,179,199,209]];
+    var c4 = function (w) { return w <= 500 ? 0 : w <= 800 ? 1 : w <= 1000 ? 2 : 3; };
+    var rc = function (h) { return h <= 1200 ? 0 : h <= 1600 ? 1 : h <= 2000 ? 2 : h <= 2200 ? 3 : 4; };
+    var rs = function (h) { return h <= 400 ? 0 : h <= 600 ? 1 : 2; };
+    var price = 0; widths.forEach(function (w) { price += C[rc(Hc)][c4(w)] + (Hs ? S[rs(Hs)][c4(w)] : 0); });
+    var parts = [], OX = (WM - W) / 2;
+    var P = function (cls, x, yt, w, h, extra) { parts.push({ cls: cls, style: 'left:' + ((OX + x) / WM * 100) + '%;top:' + ((HM - yt) / HM * 100) + '%;width:' + (w / WM * 100) + '%;height:' + (h / HM * 100) + '%;' + (extra || '') }); };
+    var G = ['#7F90A6', '#C8B79E', '#56627A', '#AE7A62', '#D4D0C7', '#4F5C52', '#9A6B78'];
+    var x0 = 0;
+    widths.forEach(function (w, i) {
+      P('plinth', x0, 100, w, 100);
+      P('box', x0, Hc, w, Hc - 100);
+      if (Hs) P('box', x0, Hh, w, Hs);
+      var ix = x0 + 19, iw = w - 38, b = 119, t = Hc - 19, seed = i * 7 + 3;
+      var type = ['pend', 'tir', 'double', 'tab'][i % 4];
+      if (type === 'double' && t - b < 1900) type = 'pend';
+      var fold = function (xx, yb, fw, fh, k) { P('fold', xx, yb + fh, fw, fh, 'background:' + G[(seed + k) % G.length]); };
+      var clothes = function (tubeY, maxLen) {
+        var c = Math.max(1, Math.floor((iw - 60) / 95)), step = (iw - 60) / c;
+        for (var k = 0; k < c; k++) { var len = Math.min(maxLen, 560 + ((seed + k * 37) % 5) * 90); P('cloth', ix + 30 + k * step + (step - 70) / 2, tubeY - 30, 70, len, 'background:' + G[(seed + k * 3) % G.length]); }
+      };
+      if (type === 'pend') { P('shelf', ix, t - 280, iw, 19); P('tube', ix + 20, t - 340, iw - 40, 24); clothes(t - 340, t - 340 - b - 80); fold(ix + 30, t - 261, iw * 0.4, 120, 2); }
+      else if (type === 'tir') {
+        for (var k = 0; k < 3; k++) { var yt = b + 220 * (k + 1); P('drawer', ix + 8, yt - 6, iw - 16, 208); P('handle', ix + iw / 2 - 70, yt - 50, 140, 18); }
+        var top0 = b + 660, sp = (t - top0) / 4;
+        for (var k = 1; k < 4; k++) P('shelf', ix, top0 + sp * k, iw, 19);
+        for (var k = 0; k < 4; k++) { var yb = top0 + sp * k + (k ? 19 : 0), fh = Math.min(140, sp * 0.5); fold(ix + 30, yb, iw * 0.4, fh, k); fold(ix + 50 + iw * 0.45, yb, iw * 0.35, fh * 0.75, k + 3); }
+      }
+      else if (type === 'double') { var mid = b + (t - b) / 2; P('tube', ix + 20, t - 60, iw - 40, 24); clothes(t - 60, t - mid - 140); P('shelf', ix, mid, iw, 19); P('tube', ix + 20, mid - 60, iw - 40, 24); clothes(mid - 60, mid - b - 140); }
+      else {
+        var sp2 = (t - b) / 6;
+        for (var k = 1; k < 6; k++) P('shelf', ix, b + sp2 * k, iw, 19);
+        for (var k = 0; k < 6; k++) { var yb2 = b + sp2 * k + (k ? 19 : 0), fh2 = Math.min(140, sp2 * 0.55); fold(ix + 40, yb2, iw * 0.38, fh2, k * 2); fold(ix + 40 + iw * 0.46, yb2, iw * 0.38, fh2 * 0.8, k * 2 + 1); }
+      }
+      x0 += w;
+    });
+    var DECORS = [["H1384","Chêne Casella blanc","bois","#E1CFBD",58,"Chêne"],["H3165","Chêne Vicenza clair","bois","#D8C0A6",84,"Chêne"],["H3152","Chêne Vicenza blanchi","bois","#E2BC94",79,"Chêne"],["H1388","Chêne Casella sable","bois","#D5BCA3",61,"Chêne"],["H1312","Chêne Whiteriver cérusé sable","bois","#C8B7A2",45,"Chêne"],["H3349","Chêne Kaisersberg","bois","#CEB48F",100,"Chêne"],["H3311","Chêne Cuneo blanchi","bois","#D2B291",94,"Chêne"],["H3157","Chêne Vicenza","bois","#D0B188",82,"Chêne"],["H1176","Chêne Halifax blanc","bois","#C4B29B",33,"Chêne"],["H1334","Chêne Sorano clair","bois","#D7AF7F",50,"Chêne"],["H1367","Chêne Casella naturel clair","bois","#CEB08B",55,"Chêne"],["H3131","Chêne Davos naturel","bois","#C4AE89",76,"Chêne"],["H3309","Chêne Gladstone sable","bois","#C6A988",93,"Chêne"],["H1362","Chêne Baronia clair","bois","#C3A88F",54,"Chêne"],["H305","Chêne Tonsberg naturel","bois","#BDA58B",27,"Chêne"],["H1145","Chêne Bardolino naturel","bois","#C0A385",32,"Chêne"],["H3322","Chêne Rovato naturel clair","bois","#C0A37E",96,"Chêne"],["H3359","Chêne Davenport naturel clair","bois","#C1A17D",101,"Chêne"],["H3170","Chêne Kendal naturel","bois","#BBA07F",85,"Chêne"],["H1377","Chêne d'Orléans sable","bois","#B7A088",56,"Chêne"],["H3303","Chêne Hamilton naturel","bois","#BF9E70",92,"Chêne"],["H1142","Chêne Sacramento marron","bois","#BB9A74",30,"Chêne"],["H1316","Chêne Bookmatch","bois","#C19870",47,"Chêne"],["H3368","Chêne de Lancaster naturel","bois","#C3995F",102,"Chêne"],["H1318","Chêne sauvage naturel","bois","#BF976B",48,"Chêne"],["H3326","Chêne Gladstone naturel","bois","#B2997B",98,"Chêne"],["H3146","Chêne Lorenzo sable","bois","#AA9A88",78,"Chêne"],["H1357","Chêne Sprée grège","bois","#AB977F",53,"Chêne"],["H1180","Chêne Halifax naturel","bois","#B4946F",34,"Chêne"],["H3395","Chêne Corbridge naturel","bois","#BD925F",103,"Chêne"],["H3171","Chêne Kendal huilé","bois","#B48F64",86,"Chêne"],["H1385","Chêne Casella naturel","bois","#B58E67",59,"Chêne"],["H1143","Chêne Sacramento gris","bois","#A2907F",31,"Chêne"],["H3317","Chêne Cuneo brun","bois","#AD8B67",95,"Chêne"],["H3156","Chêne Corbridge gris","bois","#9E8874",81,"Chêne"],["H1113","Chêne du Kansas marron","bois","#A88662",29,"Chêne"],["H1399","Chêne Denver chamois","bois","#99856F",62,"Chêne"],["H3158","Chêne Vicenza gris","bois","#918172",83,"Chêne"],["H3332","Chêne Nebraska gris","bois","#8B7967",99,"Chêne"],["H1313","Chêne Whiteriver cérusé gris","bois","#7D726C",46,"Chêne"],["H1303","Chêne Belmont marron","bois","#896D55",43,"Chêne"],["H1386","Chêne Casella marron","bois","#8F6B4C",60,"Chêne"],["H1344","Chêne Sherman cognac","bois","#926B41",51,"Chêne"],["H3133","Chêne Davos chamois","bois","#866C57",77,"Chêne"],["H1181","Chêne Halifax tabac","bois","#876C50",35,"Chêne"],["H3398","Chêne Kendal cognac","bois","#91663E",104,"Chêne"],["H1379","Chêne d'Orléans taupe","bois","#7A6859",57,"Chêne"],["H3176","Chêne Halifax zinc","bois","#81644A",87,"Chêne"],["H1330","Chêne Santa Fé vintage","bois","#79634D",49,"Chêne"],["H3154","Chêne Charleston châtain foncé","bois","#73573E",80,"Chêne"],["H3003","Chêne Norwich","bois","#63594F",73,"Chêne"],["H309","Chêne Tonsberg marron foncé","bois","#70523E",28,"Chêne"],["H2033","Chêne de Hunton foncé","bois","#725134",72,"Chêne"],["H3325","Chêne Gladstone tabac","bois","#615042",97,"Chêne"],["H1346","Chêne Sherman anthracite","bois","#5B4C46",52,"Chêne"],["H1199","Chêne thermo noir","bois","#2D2119",36,"Chêne"],["H1715","Noyer Parona","bois","#C49874",69,"Noyer"],["H3700","Noyer du Pacifique naturel","bois","#B2926E",111,"Noyer"],["H7604","Noyer Dimaro naturel","bois","#A68B74",120,"Noyer"],["H3734","Noyer de Bourgogne naturel","bois","#8B6039",115,"Noyer"],["H3710","Noyer Carini naturel","bois","#795F48",113,"Noyer"],["H1714","Noyer Lincoln","bois","#724F33",68,"Noyer"],["H3702","Noyer du Pacifique tabac","bois","#614B36",112,"Noyer"],["H7586","Noyer Alba tabac","bois","#64432D",119,"Noyer"],["H1307","Noyer Warmia brun","bois","#61402C",44,"Noyer"],["H3195","Fineline blanc","bois","#EAEAE3",89,"Fineline"],["H3197","Fineline gris moyen","bois","#9F968F",90,"Fineline"],["H3198","Fineline gris foncé","bois","#62584F",91,"Fineline"],["H3190","Fineline Metallic anthracite","bois","#3F3937",88,"Fineline"],["H1277","Acacia de Lakeland crème","bois","#DBC3A9",42,"Acacia"],["H1242","Acacia Sheffield naturel","bois","#CAA882",39,"Acacia"],["H1247","Acacia Sheffield graphite","bois","#4D3D36",40,"Acacia"],["H1225","Frêne Trondheim","bois","#EEEAE7",38,"Frêne"],["H1223","Frêne Seville","bois","#E7DACA",37,"Frêne"],["H1250","Frêne Navarra sable","bois","#D2BCA4",41,"Frêne"],["H3409","Mélèze naturel","bois","#E4C69C",107,"Mélèze"],["H3408","Mélèze brun thermo","bois","#846146",106,"Mélèze"],["H3406","Mélèze anthracite","bois","#534B43",105,"Mélèze"],["H3433","Pin Aland polaire","bois","#E6DCCA",109,"Pin"],["H1401","Pin Cascina","bois","#D4D0C4",63,"Pin"],["H3430","Pin Aland blanc","bois","#D1C3B2",108,"Pin"],["H3786","Bolivar Wood naturel","bois","#9E7C66",116,"Bolivar"],["H3787","Bolivar Wood brun","bois","#6F4E3A",117,"Bolivar"],["H1710","Châtaignier du Kentucky sable","bois","#C9B298",67,"Châtaignier"],["H1708","Châtaignier Brighton","bois","#B08E73",66,"Châtaignier"],["H1582","Hêtre du Tyrol","bois","#D3AE84",-1,"Hêtre"],["H1910","Hêtre Willow","bois","#D4A873",71,"Hêtre"],["H1732","Bouleau sable","bois","#E7CFAF",70,"Bouleau"],["H1636","Cerisier Locarno","bois","#AA7041",65,"Cerisier"],["H3012","Coco bolo","bois","#CAA97F",74,"Coco"],["H1487","Epicéa de Bramberg","bois","#B08E6B",64,"Epicéa"],["H3860","Erable américain champagne","bois","#E0CFBA",118,"Erable"],["H3043","Eucalyptus brun foncé","bois","#231814",75,"Eucalyptus"],["H3450","Fleetwood blanc","bois","#E2D3BC",110,"Fleetwood"],["H3730","Hickory naturel","bois","#C39F6E",114,"Hickory"],["U104","Blanc albâtre","unis","#FDF8E4",121,"Blanc"],["U222","Blanc écru","unis","#FDF1DB",132,"Blanc"],["U216","Blanc cassé","unis","#F8EFDE",131,"Blanc"],["U113","Beige sable","unis","#FBECCF",122,"Beige"],["U115","Beige carat","unis","#EFE1C6",124,"Beige"],["U707","Soie grise","unis","#E4E1DC",174,"Beige"],["U156","Beige rosé","unis","#E6D4C0",127,"Beige"],["U211","Beige amande","unis","#B3A092",130,"Beige"],["U250","Beige caramel","unis","#A6886C",134,"Beige"],["U232","Nude abricot","unis","#C79886",133,"Nude"],["U830","Nude terracotta","unis","#C7825B",189,"Nude"],["U131","Jaune citron","unis","#FDEC3A",126,"Jaune"],["U125","Jaune sable","unis","#E4BE8F",125,"Jaune"],["U114","Jaune tournesol","unis","#FBC000",123,"Jaune"],["U163","Jaune curry","unis","#E2AF3A",128,"Jaune"],["U332","Orange","unis","#F0822B",138,"Orange"],["U350","Orange de Sienne","unis","#CD6B00",140,"Orange"],["U335","Rouge oxyde","unis","#8A554F",139,"Rouge"],["U321","Rouge","unis","#C81518",135,"Rouge"],["U399","Rouge grenat","unis","#5F1D21",141,"Rouge"],["U323","Rouge cerise","unis","#9B091C",136,"Rouge"],["U444","Cassis","unis","#59393A",144,"Cassis"],["U325","Rose antique","unis","#C39A94",137,"Rose"],["U420","Lilas","unis","#947E93",142,"Lilas"],["U430","Violet","unis","#605881",143,"Violet"],["U500","Bleu glacier","unis","#AAD1D0",145,"Bleu"],["U522","Bleu horizon","unis","#A2BEE5",149,"Bleu"],["U540","Bleu denim","unis","#92A3B3",151,"Bleu"],["U505","Bleu nordique","unis","#639CB9",148,"Bleu"],["U502","Bleu brume","unis","#557085",146,"Bleu"],["U633","Bleu turquoise","unis","#008196",163,"Bleu"],["U545","Bleu baltique","unis","#455B68",152,"Bleu"],["U504","Bleu cosmique","unis","#38526D",147,"Bleu"],["U525","Bleu de Delft","unis","#005BA4",150,"Bleu"],["U565","Bleu océan","unis","#244D5F",154,"Bleu"],["U560","Bleu outremer","unis","#13326B",153,"Bleu"],["U599","Bleu indigo catégorie 6 pelliculé","unis","#252B37",157,"Bleu"],["U570","Bleu nuit","unis","#1B2751",155,"Bleu"],["U575","Bleu profond","unis","#102341",156,"Bleu"],["U608","Vert opale","unis","#C6D1C0",160,"Vert"],["U638","Vert sauge","unis","#BEB9A3",165,"Vert"],["U630","Vert pomme","unis","#A8C849",162,"Vert"],["U636","Vert fjord","unis","#8D9B9B",164,"Vert"],["U640","Vert olive","unis","#99966D",166,"Vert"],["U626","Vert kiwi","unis","#829748",161,"Vert"],["U604","Vert eucalyptus","unis","#737D74",158,"Vert"],["U669","Vert cèdre","unis","#7A7A70",170,"Vert"],["U646","Vert Niagara","unis","#3D7780",168,"Vert"],["U645","Vert agave","unis","#69674E",167,"Vert"],["U665","Vert minéral","unis","#50605F",169,"Vert"],["U606","Vert sapin","unis","#153F2B",159,"Vert"],["U699","Vert foncé","unis","#1C3427",171,"Vert"],["U775","Gris brume","unis","#E6E4D8",185,"Gris"],["U705","Gris angora","unis","#E2DCD0",173,"Gris"],["U708","Gris clair","unis","#D2CDC7",175,"Gris"],["U702","Gris cachemire","unis","#D6C8BB",172,"Gris"],["U750","Gris souris","unis","#D0C7B8",181,"Gris"],["U763","Gris perle","unis","#C2BFBA",183,"Gris"],["U201","Gris galet","unis","#B5AE9E",129,"Gris"],["U727","Gris argile","unis","#A59888",176,"Gris"],["U788","Gris arctique","unis","#979390",187,"Gris"],["U740","Gris argile foncé","unis","#8E8478",178,"Gris"],["U732","Gris macadam","unis","#838582",177,"Gris"],["U767","Gris cubanite","unis","#877D73",184,"Gris"],["U780","Gris céladon","unis","#737A82",186,"Gris"],["U960","Gris onyx","unis","#686765",191,"Gris"],["U963","Gris ombre","unis","#484848",193,"Gris"],["U755","Gris havane","unis","#4D4445",182,"Gris"],["U961","Gris graphite","unis","#3D3936",192,"Gris"],["U748","Brun sépia","unis","#675950",180,"Brun"],["U741","Brun taupe","unis","#5F564F",179,"Brun"],["U818","Marron foncé","unis","#54362B",188,"Brun"],["U989","Brun noir","unis","#36251E",194,"Brun"],["U899","Soft Black catégorie 4 pelliculé","unis","#3A3633",190,"Noir"],["U998","Reflet noir","unis","#020204",195,"Noir"],["U999","Noir","unis","#020204",196,"Noir"],["F186","Béton Chicago gris clair","matieres","#9A9693",1,"Béton"],["F187","Béton Chicago gris foncé","matieres","#5F5447",2,"Béton"],["F637","Chromix blanc","matieres","#E0D8C5",19,"Pierre"],["F661","Pierre Calcit beige","matieres","#D6C5B5",21,"Pierre"],["F685","Acapulco","matieres","#BBA485",23,"Pierre"],["F662","Pierre Calcit gris galet","matieres","#B2A49B",22,"Pierre"],["F638","Chromix argent","matieres","#A19990",20,"Pierre"],["F235","Ardoise Scivaro","matieres","#444243",4,"Pierre"],["F237","Ardoise Cupria","matieres","#302A27",5,"Pierre"],["F800","Marbre cristal","matieres","#EDEAE4",25,"Marbre"],["F812","Marbre Levanto blanc","matieres","#EBEAE6",26,"Marbre"],["F037","Travertin Taormina","matieres","#DBC9B7",0,"Marbre"],["F244","Marbre Candela anthracite","matieres","#595857",6,"Marbre"],["F206","Pietra Grigia noir","matieres","#322E2D",3,"Marbre"],["F765","Gris argent brossé","matieres","#A6A69E",24,"Métal"],["F527","Métal brossé or","matieres","#C39F6D",14,"Métal"],["F579","Métal brossé croisé","matieres","#9D8C7A",16,"Métal"],["F500","Metallic inox","matieres","#8B8380",13,"Métal"],["F323","Cobra bronze","matieres","#886C54",7,"Métal"],["F434","Acier brossé cubanite","matieres","#665B53",12,"Métal"],["F528","Métal brossé bronze","matieres","#6B503C",15,"Métal"],["F416","Textile beige","matieres","#D0C2A8",8,"Textile"],["F417","Textile gris","matieres","#C5BBAF",9,"Textile"],["F634","Canevas gris","matieres","#97928C",17,"Textile"],["F424","Lin taupe","matieres","#918879",10,"Textile"],["F433","Lin anthracite","matieres","#807A74",11,"Textile"],["F635","Canevas anthracite","matieres","#6B6764",18,"Textile"],["W1100","Blanc alpin","blancs","#FDFEF9",201,"Blanc"],["W1000","Blanc premium","blancs","#F9FBF0",200,"Blanc"],["W980","Blanc kaolin","blancs","#FBF9EC",198,"Blanc"],["W990","Blanc cristal","blancs","#FCF5E2",199,"Blanc"],["W960","Blanc classique","blancs","#F3F2EE",197,"Blanc"],["W1200","Blanc porcelaine","blancs","#F5F1E5",202,"Blanc"],["W908","Blanc craie","blancs","#EEEDE6",-1,"Blanc"]];
+    var SPR = '/_blob/661814100ee30784cedacc903f28458f', SW = 34, SC = 15, SR = 14;
+    var DEC = {}; DECORS.forEach(function (d) { DEC[d[0]] = d; });
+    var TEX = {"H1384":[0,1],"H3165":[1,1],"H3152":[2,1],"H1388":[3,1],"H1312":[4,1],"H3349":[5,1],"H3311":[6,1],"H3157":[7,1],"H1176":[8,1],"H1334":[9,1],"H1367":[10,1],"H3131":[11,1],"H3309":[12,1],"H1362":[13,1],"H305":[14,1],"H1145":[15,1],"H3322":[16,1],"H3359":[17,1],"H3170":[18,1],"H1377":[19,1],"H3303":[20,1],"H1142":[21,1],"H1316":[22,1],"H3368":[23,1],"H1318":[24,1],"H3326":[25,1],"H3146":[26,1],"H1357":[27,1],"H1180":[28,1],"H3395":[29,1],"H3171":[30,1],"H1385":[31,1],"H1143":[32,1],"H3317":[33,1],"H3156":[34,1],"H1113":[35,1],"H1399":[36,1],"H3158":[37,1],"H3332":[38,1],"H1313":[39,1],"H1303":[40,1],"H1386":[41,1],"H1344":[42,1],"H3133":[43,1],"H1181":[44,1],"H3398":[45,1],"H1379":[46,1],"H3176":[47,1],"H1330":[48,1],"H3154":[49,1],"H3003":[50,1],"H309":[51,1],"H2033":[52,1],"H3325":[53,1],"H1346":[54,1],"H1199":[55,1],"H1715":[56,1],"H3700":[57,1],"H7604":[58,1],"H3734":[59,1],"H3710":[60,1],"H1714":[61,1],"H3702":[62,1],"H7586":[63,1],"H1307":[64,1],"H3195":[65,1],"H3197":[66,1],"H3198":[67,1],"H3190":[68,1],"H1277":[69,1],"H1242":[70,1],"H1247":[71,1],"H1225":[72,1],"H1223":[73,1],"H1250":[74,1],"H3409":[75,1],"H3408":[76,1],"H3406":[77,1],"H3433":[78,1],"H1401":[79,1],"H3430":[80,1],"H3786":[81,1],"H3787":[82,1],"H1710":[83,1],"H1708":[84,1],"H1910":[85,1],"H1732":[86,1],"H1636":[87,1],"H3012":[88,1],"H1487":[89,1],"H3860":[90,1],"H3043":[91,1],"H3450":[92,1],"H3730":[93,1],"F186":[94,0],"F187":[95,0],"F637":[96,0],"F661":[97,0],"F685":[98,0],"F662":[99,0],"F638":[100,0],"F235":[101,0],"F237":[102,0],"F800":[103,0],"F812":[104,0],"F037":[105,0],"F244":[106,0],"F206":[107,0],"F765":[108,0],"F527":[109,0],"F579":[110,0],"F500":[111,0],"F323":[112,0],"F434":[113,0],"F528":[114,0],"F416":[115,0],"F417":[116,0],"F634":[117,0],"F424":[118,0],"F433":[119,0],"F635":[120,0]};
+    var PHOTOS = { H3170: '/_blob/eec3c9b534f71f3bca8597181775ceb5' };
+    var decorCode = DEC[st.decor] ? st.decor : 'H3170', decorSel = DEC[decorCode], dc = decorSel[3];
+    var famCur = st.fam || decorSel[2];
+    var WP = function (u, v) { var bot = 440 + 80 * u, top = 60 - 50 * u; return [300 + 600 * u, bot - v * (bot - top)]; };
+    var DX = -46, DY = 22;
+    var FP = function (u, v) { var p = WP(u, v); return [p[0] + DX, p[1] + DY]; };
+    var pts = function (arr) { return arr.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' '); };
+    var scene = [], handles = [];
+    var U = [0.12, 0.37, 0.62, 0.88], V0 = 0.04, VS = 0.76, VT = 0.95;
+    scene.push({ pts: pts([WP(U[0], V0), FP(U[0], V0), FP(U[0], VT), WP(U[0], VT)]), fill: dc, sw: 2 });
+    scene.push({ pts: pts([WP(U[0], V0), FP(U[0], V0), FP(U[0], VT), WP(U[0], VT)]), fill: 'rgba(0,0,0,0.16)', sw: 2 });
+    scene.push({ pts: pts([FP(U[0], 0), FP(U[3], 0), FP(U[3], V0), FP(U[0], V0)]), fill: dc, sw: 1.5 });
+    scene.push({ pts: pts([FP(U[0], 0), FP(U[3], 0), FP(U[3], V0), FP(U[0], V0)]), fill: 'rgba(0,0,0,0.22)', sw: 1.5 });
+    for (var m = 0; m < 3; m++) {
+      var ua = U[m], ub = U[m + 1], um = (ua + ub) / 2;
+      [[V0, VS], [VS, VT]].forEach(function (r) {
+        [[ua, um], [um, ub]].forEach(function (c) {
+          scene.push({ pts: pts([FP(c[0] + 0.004, r[0] + 0.006), FP(c[1] - 0.004, r[0] + 0.006), FP(c[1] - 0.004, r[1] - 0.006), FP(c[0] + 0.004, r[1] - 0.006)]), fill: dc, sw: 2 });
+        });
+      });
+      var h1 = FP(um - 0.012, 0.44), h2 = FP(um - 0.012, 0.54), h3 = FP(um + 0.012, 0.44), h4 = FP(um + 0.012, 0.54);
+      handles.push({ x1: h1[0], y1: h1[1], x2: h2[0], y2: h2[1] }, { x1: h3[0], y1: h3[1], x2: h4[0], y2: h4[1] });
+    }
+    var fmt = function (v) { return String(v).replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F') + ' mm'; };
+    var logo = (this.props.logo || '').trim();
+    return {
+      W: W, H: Hh, parts: parts, cfgPrice: price,
+      setBox: function (el) { self.box = el; }, dragL: drag('L'), dragR: drag('R'), dragT: drag('T'), keyW: keyW, keyH: keyH,
+      wPct: (W / WM * 100) + '%', hPct: (Hh / HM * 100) + '%', xL: (OX / WM * 100) + '%', xR: ((OX + W) / WM * 100) + '%',
+      yT: ((HM - Hh) / HM * 100) + '%', yMid: ((HM - Hh / 2) / HM * 100) + '%',
+      wLabel: fmt(W), hLabel: fmt(Hh),
+      cfgSummary: n + ' caisson' + (n > 1 ? 's' : '') + ' de ' + base + ' mm' + (Hs ? ' · fabriqués en deux parties' : ''),
+      menuCls: st.menu ? 'open' : '', menuExp: st.menu ? 'true' : 'false',
+      toggleMenu: function () { self.setState({ menu: !st.menu }); }, closeMenu: function () { self.setState({ menu: false }); },
+      logo: logo, hasLogo: !!logo, noLogo: !logo, logoHeight: this.props.logoHeight || 32,
+      callouts: [
+        [1, 391, 100, 100, 'EGGER · PEFC', '19 mm PEFC, fond 12 mm'],
+        [2, 385, 150, 205, 'EGGER', 'Chant ABS 0,8 mm assorti'],
+        [3, 365, 224, 310, 'DOMUS LINE', 'Néon LED 3000 K'],
+        [4, 376, 377, 415, 'BLUM', 'Charnières soft-close'],
+        [5, 380, 560, 520, 'LAMELLO', 'Assemblage Cabineo'],
+        [6, 377, 612, 625, 'BLUM', 'Tiroirs Merivobox']
+      ].map(function (r) {
+        var px = r[1], py = r[2], ly = r[3];
+        return { n: String(r[0]), d: 'M' + px + ' ' + py + ' L478 ' + ly + ' L494 ' + ly, ly: ly, top: ((ly - 60) / 653 * 100) + '%', name: r[4], ref: r[5], logo: '', hasLogo: false, noLogo: true };
+      }),
+      pains: [
+        { pain: 'La cote qui bouge entre le relevé et la pose.', answer: 'Le BAT fige la cote avant fabrication. Ce qui est signé est ce qui est fabriqué.' },
+        { pain: 'Le meuble en kit qui arrive la veille de la réception.', answer: 'Monté, réglé, étiqueté en 72 h. Il ne reste qu’à caler et fixer.' },
+        { pain: 'La prise ou la plinthe oubliée sur le plan.', answer: 'Les contraintes du mur sont prévues sur le BAT et usinées à l’atelier.' },
+        { pain: 'Pas d’atelier, et pas un mètre carré libre chez le client pour sortir la scie.', answer: 'Tout est découpé, percé et monté chez nous. Sur place, il ne reste qu’à caler et fixer.' }
+      ],
+      swMax: st.more ? 'none' : '84px', moreExp: st.more ? 'true' : 'false',
+      moreLabel: st.more ? 'Voir moins de décors' : 'Voir plus de décors (' + DECORS.filter(function (d) { return d[2] === famCur; }).length + ')',
+      toggleMore: function () { self.setState({ more: !st.more }); },
+      famBtns: [['bois', 'Bois'], ['unis', 'Unis'], ['matieres', 'Matières'], ['blancs', 'Blancs']].map(function (f) { var on = f[0] === famCur; return { label: f[1], n: DECORS.filter(function (d) { return d[2] === f[0]; }).length, on: on ? 'true' : 'false', bgc: on ? 'var(--ink)' : 'transparent', fg: on ? 'var(--surface)' : 'var(--ink)', border: on ? 'var(--ink)' : 'var(--line-strong)', pick: function () { self.setState({ fam: f[0] }); } }; }),
+      decorBtns: DECORS.filter(function (d) { return d[2] === famCur; }).map(function (d) { var on = d[0] === decorCode, i = d[4]; return { code: d[0], name: d[1], type: d[5], bg: i < 0 ? d[3] : 'url(' + SPR + ') ' + (-(i % SC) * SW) + 'px ' + (-Math.floor(i / SC) * SW) + 'px / ' + (SC * SW) + 'px ' + (SR * SW) + 'px no-repeat ' + d[3], on: on ? 'true' : 'false', ring: on ? '2px solid var(--signal)' : 'none', pick: function () { self.setState({ decor: d[0] }); } }; }),
+      decorCaption: decorSel[0] + ' · ' + decorSel[1] + ' · Egger' + (decorSel[4] < 0 ? ' · visuel à venir' : ''),
+      photo: PHOTOS.H3170,
+      photoAlt: 'Dressing de quatre modules, portes pleine hauteur, tablettes, tiroirs et penderies, en décor ' + decorSel[1],
+      sim: (function () {
+        var K = 0.6, TW = 256 * K, TH = 192 * K, t = TEX[decorCode], hx = decorSel[3];
+        var lift = function (h) { return 'rgb(' + [1, 3, 5].map(function (i) { return Math.round(23 + 0.91 * parseInt(h.substr(i, 2), 16)); }).join(',') + ')'; };
+        var o = { show: decorCode === 'H3170' ? 0 : 1, pw: TW, ph: TH, ix: 0, iy: 0, iw: 11 * TW, ih: 11 * TH, rot: '', fill: lift(hx) };
+        if (t) { o.ix = -(t[0] % 11) * TW; o.iy = -Math.floor(t[0] / 11) * TH; o.rot = t[1] ? 'rotate(90)' : ''; o.fill = 'url(#bm-tex)'; }
+        return o;
+      })(),
+      photoNote: decorCode === 'H3170' ? 'Dressing BAAM, décor Chêne Kendal naturel' : 'Simulation du décor ' + decorSel[0] + ' ' + decorSel[1] + ' · rendu indicatif',
+      scene: scene, handles: handles,
+      two: 2, three: 3, yes: true, total: 1547,
+      figures: [
+        { value: '72 h', label: 'Fabrication après BAT', accent: true },
+        { value: '1 mm', label: 'Cotes libres' },
+        { value: 'MONTÉ', label: 'Assemblé et réglé' },
+        { value: eur(279), label: 'Premier prix HT' }
+      ],
+      caissonPrice: 379, picScale: 2.4,
+      options: [
+        { name: 'VANTAIL', n: '01', text: 'La façade, facturée à l’unité. Jusqu’à 600 mm de large par porte, pleine hauteur jusqu’à 2700 mm.', items: [{ label: 'Vantail 400 × 2000', price: eur(89) }, { label: 'Vantail 400 × 2480', price: eur(119) }, { label: 'Vantail 600 × 2480', price: eur(129) }] },
+        { name: 'DIVISIONS', n: '02', text: 'Pour organiser l’intérieur. Tablettes réglables au pas de 32 mm.', items: [{ label: 'Tablette jusqu’à 800 mm', price: eur(29) }, { label: 'Tablette au-delà de 800 mm', price: eur(39) }, { label: 'Séparateur vertical', price: eur(79) }] },
+        { name: 'ÉQUIPEMENTS', n: '03', text: 'Quincaillerie Blum, éclairage Domus Line, montés et réglés à l’atelier.', items: [{ label: 'Tiroir Blum Merivobox', price: eur(123) }, { label: 'Penderie tube alu, le mètre', price: eur(59) }, { label: 'Néon LED 3000 K, 1 m', price: eur(183) }] },
+        { name: 'ADAPTATIONS', n: '04', text: 'Pour poser contre un mur réel : plinthe, prises, moulures. Prévues sur le BAT, usinées à l’atelier.', items: [{ label: 'Plinthe dans le décor, le mètre', price: eur(21) }, { label: 'Perçage prise ou interrupteur', price: '[PRIX]' }, { label: 'Fraisage plinthe ou plafond', price: '[PRIX]' }] }
+      ],
+      pillars: [
+        { number: '01', title: 'Prix catalogue', text: 'Un prix par élément, lisible avant l’appel.', note: 'Consultez la grille tarifaire à tout moment et ajustez vos caissons à votre budget.', proof: 'La grille par tranches de dimensions. Profondeur 400 à 650 mm au même prix.', accent: false },
+        { number: '02', title: 'Cote libre', text: 'Au millimètre, sans surcoût, au prix de la grille.', note: 'Renseignez vos cotes exactes et les contraintes du mur (prises, plinthes, moulures) dans notre configurateur.', proof: 'Largeur, hauteur, profondeur libres. Une seule structure : 19 mm, fond 12 mm.', accent: false },
+        { number: '03', title: '72 heures', text: 'Fabrication sous 72 h après validation du plan.', note: 'Une fois le BAT validé, nous vous garantissons que vos caissons sont prêts en 72 h.', proof: 'Cinq décors Egger en stock permanent.', accent: false },
+        { number: '04', title: 'Intégralement monté', text: 'Assemblé, équipé et réglé.', note: 'Vos caissons vous sont remis prêts à être installés : les réglages sont notre spécialité.', proof: 'Charnières Blum montées et réglées à l’atelier. Façades de tiroir posées.', accent: false }
+      ].map(function (p) { p.top = p.accent ? 'var(--signal)' : 'var(--line-strong)'; p.numColor = p.accent ? 'var(--signal)' : 'var(--ink-muted)'; return p; }),
+      widths: ['≤ 500', '501–800', '801–1000', '1001–1200'],
+      grid: H.map(function (h, i) { return { h: h, cells: C[i].map(eur) }; }),
+      compo: compo,
+      construction: [
+        { label: 'Panneaux', value: 'Mélaminé Egger 19 mm PEFC · fond 12 mm' },
+        { label: 'Chants', value: 'ABS Egger 0,8 mm assortis' },
+        { label: 'Assemblage', value: 'Cabineo fraisé affleurant' },
+        { label: 'Charnières', value: 'Blum soft-close, montées et réglées' },
+        { label: 'Éclairage', value: 'Domus Line · 3000 K' }
+      ],
+      cmpCols: ['Menuisier local', 'IKEA PAX', 'Atelier CNC', 'BAAM'],
+      cmpRows: [
+        { label: 'Dimensions', values: ['Libres', 'Trames fixes', 'Libres', 'Libres au millimètre, sans surcoût'] },
+        { label: 'Prix connu quand ?', values: ['Après visite et devis, 5 à 15 jours', 'Immédiatement', 'Devis 48 h à 5 jours', 'Avant l’appel, grille publique'] },
+        { label: 'Délai de fabrication', values: ['3 à 8 semaines', 'Stock', '1 à 4 semaines', '72 h après BAT'] },
+        { label: 'État à réception', values: ['Monté sur place, 2 à 4 jours', 'Colis plats, montage intégral', 'Variable, souvent à plat', 'Assemblé, équipé, charnières réglées'] },
+        { label: 'Qui porte la cote ?', values: ['Le menuisier, donc il facture le risque', 'Personne', 'Flou', 'Le client, par BAT signé'] },
+        { label: 'Interlocuteur', values: ['L’artisan, disponible mais unique', 'Aucun', 'Un commercial ou le patron', 'Un service pro, un plan, une référence'] }
+      ],
+      decors: [
+        { name: 'Blanc W980', code: 'BLC', color: 'var(--decor-blanc-w980)' },
+        { name: 'Beige Carat', code: 'CAR', color: 'var(--decor-beige-carat)' },
+        { name: 'Gris Angora', code: 'ANG', color: 'var(--decor-gris-angora)' },
+        { name: 'Chêne Kendal', code: 'KEN', color: 'var(--decor-chene-kendal)' },
+        { name: 'Noyer Carini', code: 'CRN', color: 'var(--decor-noyer-carini)' }
+      ],
+      steps: [
+        { n: '01', title: 'Vous envoyez le plan', text: 'Vos cotes, au millimètre, depuis le configurateur ou en DWG / PDF.' },
+        { n: '02', title: 'Nous dessinons le BAT', text: 'Plan d’exécution numéroté, avec références et prix, sous 24 h.' },
+        { n: '03', title: 'Vous validez', text: 'Le BAT signé rend la cote contractuelle. Rien ne part sans lui.' },
+        { n: '04', title: 'Prêts en 72 h', text: 'Caissons assemblés, équipés, réglés, emballés en colis numérotés 01/08 à 08/08, prêts à être installés.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

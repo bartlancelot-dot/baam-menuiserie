@@ -1,0 +1,65 @@
+/* Design System BAAM — generated from tokens.json */
+:root, [data-theme="papier"] {
+  --noir-encre: #14171a;
+  --blanc: #ffffff;
+  --papier: #f1f1ee;
+  --gris-technique: #82888d;
+  --gris-trait: #dcdee0;
+  --orange-signal: #ff3b00;
+  --surface: var(--papier);
+  --surface-raised: var(--blanc);
+  --ink: var(--noir-encre);
+  --ink-muted: var(--gris-technique);
+  --line: var(--gris-trait);
+  --line-strong: var(--noir-encre);
+  --signal: var(--orange-signal);
+  --on-signal: var(--blanc);
+  --focus: var(--orange-signal);
+  --decor-blanc-w980: #efeeea;
+  --decor-beige-carat: #d8ccb6;
+  --decor-gris-angora: #b4b2ad;
+  --decor-chene-kendal: #c1904f;
+  --decor-noyer-carini: #6e4529;
+}
+[data-theme="encre"] {
+  --surface: var(--noir-encre);
+  --surface-raised: #1d2125;
+  --ink: var(--blanc);
+  --ink-muted: var(--gris-technique);
+  --line: #2e3338;
+  --line-strong: var(--blanc);
+  --signal: var(--orange-signal);
+  --on-signal: var(--blanc);
+  --focus: var(--orange-signal);
+  color-scheme: dark;
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --radius-0: 0px;
+  --radius-1: 2px;
+  --rule-hair: 1px;
+  --rule-strong: 2px;
+  --rule-signal: 3px;
+  --font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+.display { font-family: var(--font-sans); font-size: 56px; line-height: 58px; font-weight: 700; letter-spacing: -0.025em; }
+.h1 { font-family: var(--font-sans); font-size: 40px; line-height: 44px; font-weight: 700; letter-spacing: -0.025em; }
+.h2 { font-family: var(--font-sans); font-size: 24px; line-height: 30px; font-weight: 700; letter-spacing: -0.02em; }
+.h3 { font-family: var(--font-sans); font-size: 16px; line-height: 22px; font-weight: 600; letter-spacing: -0.01em; }
+.body { font-family: var(--font-sans); font-size: 15px; line-height: 23px; font-weight: 400; letter-spacing: 0em; }
+.body-sm { font-family: var(--font-sans); font-size: 13px; line-height: 20px; font-weight: 400; letter-spacing: 0em; }
+.eyebrow { font-family: var(--font-sans); font-size: 11px; line-height: 16px; font-weight: 700; letter-spacing: 0.18em; }
+.price-xl { font-family: var(--font-sans); font-size: 48px; line-height: 48px; font-weight: 700; letter-spacing: -0.02em; }
+.price { font-family: var(--font-sans); font-size: 24px; line-height: 28px; font-weight: 700; letter-spacing: -0.01em; }
+.reference { font-family: var(--font-mono); font-size: 15px; line-height: 20px; font-weight: 500; letter-spacing: 0em; }
+.data { font-family: var(--font-mono); font-size: 13px; line-height: 18px; font-weight: 400; letter-spacing: 0em; }
+.data-sm { font-family: var(--font-mono); font-size: 11px; line-height: 16px; font-weight: 400; letter-spacing: 0.04em; }

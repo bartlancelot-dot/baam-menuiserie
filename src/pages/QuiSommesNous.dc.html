@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>BAAM · Qui sommes-nous</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/baam/tokens.css">
+<link rel="stylesheet" href="ds/baam/components/bundle.css">
+<script src="ds/baam/components/bundle.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}
+a{color:var(--ink)}a:hover{color:var(--signal)}
+.wrap{max-width:1280px;margin:0 auto;padding-left:clamp(16px,4vw,64px);padding-right:clamp(16px,4vw,64px);box-sizing:border-box}
+.nav-links a{text-decoration:none;font-size:14px;font-weight:500}
+.ph{background:var(--line);display:flex;align-items:flex-end;padding:14px;box-sizing:border-box;font-family:var(--font-mono);font-size:11px;line-height:16px;color:var(--ink);max-width:100%}
+.ph span{background:var(--surface-raised);padding:4px 8px}
+@media (max-width:860px){.nav-links{display:none!important}}
+</style>
+</helmet>
+<div style="background: var(--surface); color: var(--ink); font-family: var(--font-sans); width: 100%">
+
+<header style="background: var(--surface); border-bottom: 1px solid var(--line)">
+<div class="wrap" style="display: flex; align-items: center; gap: 32px; flex-wrap: wrap; padding-top: 18px; padding-bottom: 18px">
+<a href="Main.dc.html" aria-label="BAAM, retour à l'accueil" style="display: flex; align-items: center; text-decoration: none; height: 44px">
+<sc-if value="{{hasLogo}}" hint-placeholder-val="{{false}}">
+<img src="{{logo}}" alt="BAAM" style="height: {{logoHeight}}px; width: auto; display: block">
+</sc-if>
+<sc-if value="{{noLogo}}" hint-placeholder-val="{{true}}">
+<span style="font-size: 26px; font-weight: 700; letter-spacing: -0.03em; color: var(--ink)">BAAM</span>
+</sc-if>
+</a>
+<nav class="nav-links" aria-label="Navigation principale" style="display: flex; gap: 28px; margin-left: auto; flex-wrap: wrap">
+<a href="Main.dc.html">Le caisson BAAM</a>
+<a href="GrilleTarifaire.dc.html">La grille tarifaire</a>
+<a href="Main.dc.html">Nos engagements</a>
+<a href="Main.dc.html#en-situation">Tous nos décors</a>
+</nav>
+<a class="bm-btn bm-btn-primary" href="Configurateur.dc.html" style="text-decoration: none">Configurer un caisson</a>
+</div>
+</header>
+
+<section style="background: var(--surface)">
+<div class="wrap" style="display: flex; flex-wrap: wrap; gap: 48px 72px; align-items: flex-end; padding-top: clamp(48px,7vw,104px); padding-bottom: clamp(48px,6vw,88px)">
+<div style="flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+<x-import component-from-global-scope="BAAM.Eyebrow">Qui sommes-nous</x-import>
+<h1 style="margin: 0; font-size: clamp(44px,6vw,80px); line-height: 0.98; font-weight: 700; letter-spacing: -0.035em">De menuisier<br>à <span style="color: var(--signal)">fabricant</span>.</h1>
+<p style="margin: 0; max-width: 34em; font-size: 18px; line-height: 28px">BAAM est né d'une entreprise générale TCE. Pendant plusieurs années, nous avons multiplié les chantiers, relevé des cotes, dessiné des plans et posé des aménagements. Nous avons connu les mêmes plannings serrés et les mêmes contraintes clients que vous.</p>
+<p style="margin: 0; max-width: 34em; font-size: 16px; line-height: 25px; color: var(--ink)">De ces chantiers est venue une idée simple : un caisson de référence, fabriqué à vos cotes, avec un prix connu d'avance et un délai qui tient. C'est ce que nous fabriquons aujourd'hui.</p>
+</div>
+<div class="ph" style="flex: 1 1 420px; aspect-ratio: 4 / 3"><span>PHOTO · l'équipe devant le mur papier de l'atelier, de face, lumière latérale</span></div>
+</div>
+</section>
+
+<section style="background: var(--surface-raised); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line)">
+<div class="wrap" style="display: flex; flex-direction: column; gap: 40px; padding-top: clamp(56px,7vw,104px); padding-bottom: clamp(56px,7vw,104px)">
+<div style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
+<x-import component-from-global-scope="BAAM.Eyebrow" number="01">D'où nous venons</x-import>
+<x-import component-from-global-scope="BAAM.Heading" level="{{two}}">Une évolution tournée vers le service aux professionnels du bâtiment.</x-import>
+</div>
+<ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px">
+<sc-for list="{{timeline}}" as="t" hint-placeholder-count="4">
+<li style="display: flex; flex-direction: column; gap: 10px; border-top: 2px solid var(--line-strong); padding-top: 18px">
+<span style="font-family: var(--font-mono); font-size: 15px; font-weight: 500; color: var(--signal)">{{t.year}}</span>
+<span style="font-size: 18px; line-height: 24px; font-weight: 700">{{t.title}}</span>
+<span style="font-size: 14px; line-height: 22px; color: var(--ink-muted)"><sc-for list="{{t.parts}}" as="x" hint-placeholder-count="1"><span style="font-weight: {{x.w}}; color: {{x.c}}">{{x.s}}</span></sc-for></span>
+</li>
+</sc-for>
+</ol>
+</div>
+</section>
+
+<section style="background: var(--surface-raised); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line)">
+<div class="wrap" style="display: flex; flex-direction: column; gap: 40px; padding-top: clamp(56px,7vw,104px); padding-bottom: clamp(56px,7vw,104px)">
+<div style="display: flex; flex-wrap: wrap; gap: 24px 48px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px">
+<x-import component-from-global-scope="BAAM.Eyebrow" number="02">Où nous travaillons</x-import>
+<x-import component-from-global-scope="BAAM.Heading" level="{{two}}">Un atelier basé à Nanterre et toute une équipe à votre disposition.</x-import>
+</div>
+<p style="margin: 0; flex: 1 1 320px; min-width: 0; font-size: 15px; line-height: 23px">Tout se fait au même endroit : le stock de panneaux, la découpe, l'assemblage, le contrôle et l'emballage. C'est ce qui nous permet de tenir 72 h.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px">
+<sc-for list="{{atelier}}" as="a" hint-placeholder-count="4">
+<figure style="margin: 0; display: flex; flex-direction: column; gap: 12px">
+<div class="ph" style="aspect-ratio: 3 / 2; width: 100%"><span>{{a.photo}}</span></div>
+<figcaption style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 16px; font-weight: 700">{{a.title}}</span>
+<span style="font-size: 14px; line-height: 21px; color: var(--ink-muted)">{{a.text}}</span>
+</figcaption>
+</figure>
+</sc-for>
+</div>
+<x-import component-from-global-scope="BAAM.KeyFigures" items="{{figures}}"></x-import>
+</div>
+</section>
+
+<section style="background: var(--surface)">
+<div class="wrap" style="display: flex; flex-direction: column; gap: 40px; padding-top: clamp(56px,7vw,104px); padding-bottom: clamp(56px,7vw,104px)">
+<div style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
+<x-import component-from-global-scope="BAAM.Eyebrow" number="03">Ce en quoi nous croyons</x-import>
+<x-import component-from-global-scope="BAAM.Heading" level="{{two}}">Trois convictions, tirées du terrain.</x-import>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 32px">
+<sc-for list="{{beliefs}}" as="b" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 10px; border-top: 2px solid var(--line-strong); padding-top: 18px">
+<span style="font-size: 20px; line-height: 26px; font-weight: 700; letter-spacing: -0.01em">{{b.title}}</span>
+<span style="font-size: 15px; line-height: 23px; color: var(--ink)">{{b.text}}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+
+<section data-theme="encre" style="background: var(--surface); color: var(--ink)">
+<div class="wrap" style="display: flex; flex-wrap: wrap; gap: 32px 56px; align-items: center; justify-content: space-between; padding-top: clamp(48px,6vw,88px); padding-bottom: clamp(48px,6vw,88px)">
+<div style="display: flex; flex-direction: column; gap: 14px; flex: 1 1 480px; min-width: 0">
+<p style="margin: 0; font-size: clamp(24px,2.8vw,36px); line-height: 1.15; font-weight: 700; letter-spacing: -0.02em">Venez voir l'atelier.</p>
+<p style="margin: 0; max-width: 36em; font-size: 16px; line-height: 25px; color: var(--ink)">Sur rendez-vous, nous vous montrons le stock, la découpe et un caisson monté. Apportez un plan : nous le chiffrons avec vous.</p>
+<span style="font-family: var(--font-mono); font-size: 13px; color: var(--ink-muted)">[ADRESSE DE L'ATELIER] · [TÉLÉPHONE] · [E-MAIL]</span>
+</div>
+<div style="display: flex; gap: 16px; flex-wrap: wrap">
+<x-import component-from-global-scope="BAAM.Button" variant="primary">Prendre rendez-vous</x-import>
+<a class="bm-btn bm-btn-secondary" href="Configurateur.dc.html" style="text-decoration: none">Configurer un caisson</a>
+</div>
+</div>
+</section>
+
+<footer style="background: var(--surface); border-top: 1px solid var(--line)">
+<div class="wrap" style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; padding-top: 24px; padding-bottom: 32px; font-family: var(--font-mono); font-size: 11px; color: var(--ink-muted)">
+<span>Tarif professionnel HT · prix valables 2026</span>
+<span>[RAISON SOCIALE] · [ADRESSE] · [SIRET]</span>
+</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"logo":{"editor":"text","default":"","section":"Logo"},"logoHeight":{"editor":"int","default":32,"min":16,"max":64,"unit":"px","section":"Logo"},"$preview":{"width":1440,"height":4600}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var logo = (this.props.logo || '').trim();
+    var parts = function (t) { return t.split('*').map(function (s, i) { return { s: s, w: i % 2 ? 700 : 400, c: i % 2 ? 'var(--ink)' : 'inherit' }; }); };
+    return {
+      two: 2,
+      logo: logo, hasLogo: !!logo, noLogo: !logo, logoHeight: this.props.logoHeight || 32,
+      timeline: [
+        { year: '2015', title: 'Une entreprise générale TCE', parts: parts('Rénovation tous corps d’état : relevés, plans, coordination des lots et pose des aménagements en Île-de-France.') },
+        { year: '2015–2025', title: '+100 chantiers plus tard', parts: parts('Des cotes qui passent de main en main, pas d’atelier pour faire des découpes propres, et des plannings toujours plus serrés.') },
+        { year: '2025', title: 'L’atelier se met en place', parts: parts('Installation de notre atelier à Nanterre, acquisition de notre première machine à commande numérique.') },
+        { year: '2026', title: 'BAAM', parts: parts('Le caisson de référence, fabriqué à vos cotes, au prix catalogue, monté en 72 h après BAT.') }
+      ],
+      team: [
+        { name: '[PRÉNOM NOM]', role: 'Fondateur · [RÔLE]', text: '[Son parcours en deux phrases : d’où il vient, ce qu’il a fait sur les chantiers, ce qu’il fait chez BAAM.]' },
+        { name: '[PRÉNOM NOM]', role: 'Bureau d’études · BAT', text: '[Celle ou celui qui dessine vos plans d’exécution et valide les cotes avec vous.]' },
+        { name: '[PRÉNOM NOM]', role: 'Atelier · fabrication', text: '[Celle ou celui qui découpe, assemble, règle et contrôle chaque caisson avant emballage.]' }
+      ],
+      atelier: [
+        { photo: 'PHOTO · deux personnes autour d’un plan imprimé et d’un nuancier Egger', title: 'Le conseil et la conception', text: 'Une équipe d’experts à votre écoute pour concevoir chaque projet : nous vérifions vos plans, optimisons vos caissons et vous conseillons avant la mise en production.' },
+        { photo: 'PHOTO · la CNC en usinage, cadrée serré sur l’outil', title: 'La découpe et le contrôle', text: 'Chaque panneau est découpé et percé à la cote du BAT, au millimètre. Chaque pièce est contrôlée avant montage.' },
+        { photo: 'PHOTO · caissons alignés, filmés, étiquetés', title: 'Le montage et le réglage', text: 'Chaque caisson est monté et réglé par nos soins pour vous assurer une pose optimale.' },
+        { photo: 'PHOTO · zone de chargement, caissons filmés prêts à l’enlèvement', title: 'La plateforme logistique', text: 'Un site facile d’accès, pensé pour vos enlèvements : vous arrivez, vous chargez, vous repartez.' }
+      ],
+      figures: [
+        { value: '1 000 m²', label: 'Surface de l’atelier' },
+        { value: '72 h', label: 'Fabrication après BAT', accent: true },
+        { value: '+200', label: 'Décors en stock' },
+        { value: '+15', label: 'Personnes dans l’équipe' }
+      ],
+      beliefs: [
+        { title: 'La cote est un contrat.', text: 'Vous fournissez la cote, nous garantissons la fabrication. Le BAT signé protège tout le monde.' },
+        { title: 'Une seule construction, la bonne.', text: 'Nous avons choisi chaque composant une fois pour toutes. Vous n’avez plus à vous poser la question, et c’est ce qui permet un prix affiché et un délai tenu.' },
+        { title: 'Un caisson se recommande à l’identique.', text: 'Le caisson commandé en 2026 sera le même en 2031 : même référence, mêmes composants.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

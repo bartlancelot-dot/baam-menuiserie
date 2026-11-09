@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>BAAM · Configurateur</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/baam/tokens.css">
+<link rel="stylesheet" href="ds/baam/components/bundle.css">
+<script src="ds/baam/components/bundle.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}
+a{color:var(--ink)}a:hover{color:var(--signal)}
+.wrap{max-width:1440px;margin:0 auto;padding-left:clamp(16px,3vw,48px);padding-right:clamp(16px,3vw,48px);box-sizing:border-box}
+.nav-links a{text-decoration:none;font-size:14px;font-weight:500}
+@media (max-width:860px){.nav-links{display:none!important}}
+.lbl{font-size:11px;line-height:16px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-muted)}
+.num{display:flex;align-items:center;background:var(--surface-raised);border:1px solid var(--line);border-bottom:2px solid var(--ink)}
+.num input{flex:1;min-width:0;border:0;background:transparent;padding:12px 14px;font-family:var(--font-mono);font-size:15px;color:var(--ink)}
+.num input:focus-visible{outline:2px solid var(--signal);outline-offset:-2px}
+.num span{font-family:var(--font-mono);font-size:12px;color:var(--ink-muted);padding-right:12px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{font:inherit;font-size:13px;font-weight:600;min-height:40px;padding:0 14px;cursor:pointer;border:1px solid var(--line-strong)}
+.step{font:inherit;background:none;border:0;border-bottom:3px solid transparent;padding:14px 4px 12px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:2px;min-width:0}
+.ln{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid var(--line);font-size:13px;line-height:20px}
+.ln b{font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}
+.ref{font-family:var(--font-mono);font-size:11px;color:var(--ink-muted);margin-right:8px}
+.abtn{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 20px;font-size:14px;font-weight:600;text-decoration:none;border:2px solid var(--ink);box-sizing:border-box}
+</style>
+</helmet>
+<div style="background: var(--surface); color: var(--ink); font-family: var(--font-sans); width: 100%">
+
+<header style="background: var(--surface); border-bottom: 1px solid var(--line)">
+<div class="wrap" style="display: flex; align-items: center; gap: 32px; flex-wrap: wrap; padding-top: 18px; padding-bottom: 18px">
+<a href="Main.dc.html" aria-label="BAAM, retour à l'accueil" style="display: flex; align-items: center; text-decoration: none; height: 44px">
+<sc-if value="{{hasLogo}}" hint-placeholder-val="{{false}}">
+<img src="{{logo}}" alt="BAAM" style="height: {{logoHeight}}px; width: auto; display: block">
+</sc-if>
+<sc-if value="{{noLogo}}" hint-placeholder-val="{{true}}">
+<span style="font-size: 26px; font-weight: 700; letter-spacing: -0.03em; color: var(--ink)">BAAM</span>
+</sc-if>
+</a>
+<nav class="nav-links" aria-label="Navigation principale" style="display: flex; gap: 28px; margin-left: auto; flex-wrap: wrap">
+<a href="Main.dc.html">Le caisson BAAM</a>
+<a href="GrilleTarifaire.dc.html">La grille tarifaire</a>
+<a href="Main.dc.html">Nos engagements</a>
+<a href="Main.dc.html">Tous nos décors</a>
+</nav>
+</div>
+</header>
+
+<section style="background: var(--surface)">
+<div class="wrap" style="display: flex; flex-direction: column; gap: 8px; padding-top: clamp(24px,3vw,40px); padding-bottom: 20px">
+<x-import component-from-global-scope="BAAM.Eyebrow">Configurateur · prix professionnels HT</x-import>
+<h1 style="margin: 0; font-size: clamp(28px,3.4vw,44px); line-height: 1.05; font-weight: 700; letter-spacing: -0.03em">Configurez vos caissons.</h1>
+</div>
+</section>
+
+<section style="background: var(--surface)">
+<div class="wrap" style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; padding-bottom: 32px">
+
+<figure style="flex: 999 1 560px; min-width: 0; margin: 0; background: var(--surface-raised); border: 1px solid var(--line)">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 18px; border-bottom: 1px solid var(--line)">
+<span style="font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted)">{{summary}} · {{decorLabel}}</span>
+<div class="seg" role="tablist" aria-label="Vue">
+<sc-for list="{{viewOpts}}" as="v" hint-placeholder-count="2">
+<button type="button" role="tab" aria-selected="{{v.on}}" onClick="{{v.pick}}" style="background: {{v.bg}}; color: {{v.fg}}">{{v.label}}</button>
+</sc-for>
+</div>
+</div>
+<div style="padding: clamp(12px,2vw,28px); background-color: var(--surface-raised); background-image: linear-gradient(color-mix(in srgb, var(--ink) 6%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--ink) 6%, transparent) 1px, transparent 1px); background-size: 12px 12px; background-position: -1px -1px">
+<div style="position: relative; width: 100%; max-width: {{maxW}}px; margin: 0 auto; aspect-ratio: {{ar}}; container-type: inline-size">
+<svg viewBox="{{vb}}" role="img" aria-label="{{svgLabel}}" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block">
+<sc-if value="{{isFull}}" hint-placeholder-val="{{true}}">
+<line x1="{{ceil.x1}}" y1="0" x2="{{ceil.x2}}" y2="0" style="stroke: var(--ink-muted); stroke-width: 6; stroke-dasharray: 30 20"></line>
+<text x="{{ceil.x1}}" y="-30" style="fill: var(--ink-muted); font-family: var(--font-mono); font-size: 60px">PLAFOND</text>
+</sc-if>
+<line x1="{{ceil.x1}}" y1="{{floorY}}" x2="{{ceil.x2}}" y2="{{floorY}}" style="stroke: var(--ink); stroke-width: 8"></line>
+<sc-for list="{{rects}}" as="r" hint-placeholder-count="12">
+<rect x="{{r.x}}" y="{{r.y}}" width="{{r.w}}" height="{{r.h}}" rx="{{r.rx}}" style="{{r.st}}"></rect>
+</sc-for>
+<sc-for list="{{lines}}" as="l" hint-placeholder-count="10">
+<line x1="{{l.x1}}" y1="{{l.y1}}" x2="{{l.x2}}" y2="{{l.y2}}" style="{{l.st}}"></line>
+</sc-for>
+<sc-for list="{{doors}}" as="d" hint-placeholder-count="0">
+<rect x="{{d.x}}" y="{{d.y}}" width="{{d.w}}" height="{{d.h}}" style="fill: {{fillCol}}; stroke: var(--ink); stroke-width: 6"></rect>
+<line x1="{{d.hx}}" y1="{{d.hy1}}" x2="{{d.hx}}" y2="{{d.hy2}}" style="stroke: var(--ink); stroke-width: 14; stroke-linecap: round"></line>
+</sc-for>
+<sc-for list="{{selR}}" as="b" hint-placeholder-count="1">
+<rect x="{{b.x}}" y="{{b.y}}" width="{{b.w}}" height="{{b.h}}" style="fill: none; stroke: var(--signal); stroke-width: 10; stroke-dasharray: 40 24"></rect>
+</sc-for>
+<sc-for list="{{hits}}" as="h" hint-placeholder-count="3">
+<rect x="{{h.x}}" y="{{h.y}}" width="{{h.w}}" height="{{h.h}}" onClick="{{h.pick}}" style="fill: transparent; cursor: pointer"><title>{{h.label}}</title></rect>
+</sc-for>
+</svg>
+<sc-for list="{{labels}}" as="t" hint-placeholder-count="6">
+<span aria-hidden="true" style="position: absolute; left: {{t.l}}%; top: {{t.t}}%; transform: {{t.tf}}; white-space: nowrap; font-family: var(--font-mono); font-size: {{t.fsv}}; line-height: 1; font-weight: {{t.fw}}; color: {{t.col}}; pointer-events: none">{{t.s}}</span>
+</sc-for>
+</div>
+</div>
+<figcaption style="display: flex; gap: 18px; flex-wrap: wrap; padding: 0 18px 14px; font-size: 12px; color: var(--ink-muted)">
+<span>Cotes en mm</span>
+<span><span style="display: inline-block; width: 18px; height: 3px; background: var(--signal); vertical-align: middle; margin-right: 6px"></span>Néon LED</span>
+<span>Cliquez sur un caisson pour l'aménager</span>
+</figcaption>
+</figure>
+
+<div style="flex: 1 1 380px; min-width: 0; max-width: 100%; background: var(--surface-raised); border: 1px solid var(--line); display: flex; flex-direction: column">
+<nav aria-label="Étapes" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding: 0 12px; border-bottom: 1px solid var(--line)">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+<button type="button" class="step" onClick="{{s.go}}" aria-current="{{s.cur}}" style="border-bottom-color: {{s.bar}}; color: {{s.fg}}">
+<span style="font-family: var(--font-mono); font-size: 11px">{{s.n}}</span>
+<span style="font-size: 12px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{s.label}}</span>
+</button>
+</sc-for>
+</nav>
+
+<div style="padding: 20px; display: flex; flex-direction: column; gap: 18px">
+
+<sc-if value="{{isStep0}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-size: 22px; line-height: 28px">Votre espace</h2>
+<p style="margin: 0; font-size: 14px; line-height: 22px; color: var(--ink-muted)">Mesurez le mur. Nous découpons le meuble en caissons et calculons les hauteurs.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600">Largeur du projet<span class="num"><input type="number" min="300" max="12000" step="10" value="{{wall}}" onChange="{{setWall}}"><span>mm</span></span></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600">Hauteur du projet<span class="num"><input type="number" min="1000" max="4000" step="10" value="{{ceiling}}" onChange="{{setCeiling}}"><span>mm</span></span></label>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<button type="button" role="checkbox" aria-checked="{{fullOn}}" onClick="{{toggleFull}}" style="display: flex; align-items: center; gap: 10px; background: transparent; border: 0; padding: 0; min-height: 32px; font: inherit; font-size: 14px; font-weight: 600; color: var(--ink); cursor: pointer; text-align: left"><span style="width: 18px; height: 18px; border: 1.5px solid var(--ink); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; line-height: 1">{{fullMark}}</span>Pleine hauteur</button>
+<span style="font-size: 12px; line-height: 18px; color: var(--ink-muted)">{{fullNote}}</span>
+<sc-if value="{{showSplit}}" hint-placeholder-val="{{true}}">
+<div style="background: var(--surface); border-left: 3px solid var(--signal); padding: 12px 14px; font-size: 13px; line-height: 20px">{{splitText}}</div>
+</sc-if>
+</div>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600">Profondeur du meuble · {{depth}} mm
+<input type="range" min="400" max="650" step="10" value="{{depth}}" onChange="{{setDepth}}" style="accent-color: var(--signal)">
+<span style="font-weight: 400; color: var(--ink-muted); font-size: 12px">De 400 à 650 mm, même prix.</span></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600">Hauteur de la plinthe · {{feet}} mm
+<input type="range" min="50" max="200" step="10" value="{{feet}}" onChange="{{setFeet}}" style="accent-color: var(--signal)">
+<span style="font-weight: 400; color: var(--ink-muted); font-size: 12px">De 50 à 200 mm, pieds réglables compris.</span></label>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span class="lbl">Décor</span>
+<div role="radiogroup" aria-label="Décor" style="display: flex; gap: 8px; flex-wrap: wrap">
+<sc-for list="{{decors}}" as="d" hint-placeholder-count="8">
+<button type="button" role="radio" aria-checked="{{d.on}}" title="{{d.code}} · {{d.name}}" aria-label="{{d.code}} {{d.name}}" onClick="{{d.pick}}" style="width: 36px; height: 36px; padding: 0; border-radius: 50%; border: 1px solid var(--line); cursor: pointer; background: {{d.bg}}; outline: {{d.ring}}; outline-offset: 2px"></button>
+</sc-for>
+</div>
+<span style="font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted)">{{decorLabel}}</span>
+<button type="button" onClick="{{openModal}}" style="align-self: flex-start; background: none; border: 0; padding: 0; font: inherit; font-size: 14px; font-weight: 600; color: var(--ink); cursor: pointer; text-decoration: underline; text-decoration-color: var(--signal); text-decoration-thickness: 2px; text-underline-offset: 4px">Voir plus de décors ({{nDecors}})</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isStep1}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-size: 22px; line-height: 28px">Les caissons</h2>
+<p style="margin: 0; font-size: 14px; line-height: 22px; color: var(--ink-muted)">Le mur est partagé en caissons égaux, de 300 à 1200 mm de large. Ajoutez-en pour des caissons plus étroits.</p>
+</div>
+<div style="display: flex; align-items: center; gap: 12px">
+<button type="button" class="abtn" onClick="{{lessCab}}" aria-label="Un caisson de moins" style="background: transparent; color: var(--ink); width: 44px; padding: 0; cursor: pointer; font-size: 20px">−</button>
+<span style="font-size: 28px; font-weight: 700; min-width: 40px; text-align: center; font-variant-numeric: tabular-nums">{{n}}</span>
+<button type="button" class="abtn" onClick="{{moreCab}}" aria-label="Un caisson de plus" style="background: transparent; color: var(--ink); width: 44px; padding: 0; cursor: pointer; font-size: 20px">+</button>
+<span style="font-size: 14px; color: var(--ink-muted)">{{wLabel}}</span>
+</div>
+<div style="display: flex; flex-direction: column">
+<span class="lbl" style="padding-bottom: 8px">Largeur de chaque caisson</span>
+<sc-for list="{{cabRows}}" as="c" hint-placeholder-count="3">
+<div class="ln" style="align-items: center">
+<span style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap"><span class="ref" style="min-width: 24px">{{c.id}}</span>
+<span class="num" style="width: 120px"><input type="number" min="300" max="1200" step="1" value="{{c.w}}" onChange="{{c.setW}}" aria-label="Largeur de {{c.id}} en mm"><span>mm</span></span>
+<span style="font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted)">{{c.dim}}</span>
+<sc-if value="{{c.split}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{toggleInfo}}" aria-label="Pourquoi un sur-caisson ?" aria-expanded="{{infoExp}}" title="Pourquoi un sur-caisson ?" style="width: 22px; height: 22px; padding: 0; border: 1.5px solid var(--ink-muted); border-radius: 50%; background: transparent; color: var(--ink-muted); font: italic 600 12px/1 var(--font-sans); cursor: pointer; display: inline-flex; align-items: center; justify-content: center">i</button></sc-if>
+<sc-if value="{{c.fixed}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{c.free}}" style="background: none; border: 0; padding: 4px; font: inherit; font-size: 12px; color: var(--ink-muted); text-decoration: underline; cursor: pointer">auto</button></sc-if>
+</span>
+<b>{{c.price}}</b>
+</div>
+</sc-for>
+<sc-if value="{{showInfo}}" hint-placeholder-val="{{false}}">
+<div style="margin-top: 10px; background: var(--surface); border-left: 3px solid var(--signal); padding: 12px 14px; font-size: 13px; line-height: 20px">{{infoText}}</div>
+</sc-if>
+<p style="margin: 8px 0 0; font-size: 12px; line-height: 18px; color: var(--ink-muted)">Saisissez une largeur : les caissons laissés en automatique se partagent le reste du mur.</p>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isStep2}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<div class="seg" role="tablist" aria-label="Caisson">
+<sc-for list="{{cabTabs}}" as="c" hint-placeholder-count="3">
+<button type="button" role="tab" aria-selected="{{c.on}}" onClick="{{c.pick}}" style="background: {{c.bg}}; color: {{c.fg}}; font-family: var(--font-mono)">{{c.id}}</button>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-size: 22px; line-height: 28px">{{cabTitle}}</h2>
+<p style="margin: 0; font-size: 14px; line-height: 22px; color: var(--ink-muted)">{{cabSub}}</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span class="lbl">Façade</span>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<div class="seg">
+<sc-for list="{{leafOpts}}" as="p" hint-placeholder-count="3">
+<button type="button" aria-pressed="{{p.on}}" onClick="{{p.pick}}" style="background: {{p.bg}}; color: {{p.fg}}; opacity: {{p.op}}">{{p.label}}</button>
+</sc-for>
+</div>
+<sc-if value="{{showMode}}" hint-placeholder-val="{{true}}">
+<div class="seg">
+<sc-for list="{{modeOpts}}" as="p" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{p.on}}" onClick="{{p.pick}}" style="background: {{p.bg}}; color: {{p.fg}}; opacity: {{p.op}}">{{p.label}}</button>
+</sc-for>
+</div>
+</sc-if>
+</div>
+<sc-if value="{{showWhere}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-wrap: wrap; gap: 8px 24px; padding-top: 2px">
+<sc-for list="{{whereOpts}}" as="w" hint-placeholder-count="2">
+<button type="button" role="checkbox" aria-checked="{{w.on}}" onClick="{{w.pick}}" style="display: flex; align-items: center; gap: 10px; background: transparent; border: 0; padding: 0; min-height: 32px; font: inherit; font-size: 14px; color: var(--ink); cursor: pointer; text-align: left"><span style="width: 18px; height: 18px; border: 1.5px solid var(--ink); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; line-height: 1">{{w.mark}}</span>{{w.label}}</button>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{doorNote}}" hint-placeholder-val="{{true}}">
+<span style="font-size: 12px; line-height: 18px; color: var(--ink-muted)">{{doorNote}}</span>
+</sc-if>
+</div>
+<sc-if value="{{hasSur}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span class="lbl">Partie à aménager</span>
+<div class="seg">
+<sc-for list="{{partOpts}}" as="p" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{p.on}}" onClick="{{p.pick}}" style="background: {{p.bg}}; color: {{p.fg}}">{{p.label}}</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span class="lbl">{{interiorTitle}}</span>
+<button type="button" role="checkbox" aria-checked="{{sepOn}}" onClick="{{toggleSep}}" style="display: flex; align-items: center; gap: 10px; background: transparent; border: 0; padding: 0; font: inherit; font-size: 14px; color: var(--ink); cursor: pointer; text-align: left"><span style="width: 18px; height: 18px; border: 1.5px solid var(--ink); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; line-height: 1">{{sepMark}}</span>Séparateur vertical au milieu <span style="color: var(--ink-muted)">({{sepPrice}})</span></button>
+<sc-if value="{{autoSepNote}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 12px; line-height: 18px; color: var(--ink-muted)">Un séparateur est ajouté automatiquement : au-delà de 900 mm, les tablettes fléchissent.</span>
+</sc-if>
+<sc-for list="{{zonesUI}}" as="z" hint-placeholder-count="1">
+<div style="display: flex; flex-direction: column; gap: 12px; border: 1px solid var(--line); padding: 14px">
+<div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700"><span>{{z.title}}</span><span style="font-family: var(--font-mono); font-weight: 400; color: var(--ink-muted)">{{z.width}}</span></div>
+<sc-if value="{{z.canPend}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; align-items: center; gap: 12px">
+<span style="flex: 1; font-size: 14px; font-weight: 600">Penderie <span style="font-weight: 400; font-size: 12px; color: var(--ink-muted)">tube alu anti-bruit</span></span>
+<button type="button" class="abtn" onClick="{{z.lessPend}}" aria-label="Une penderie de moins" style="background: transparent; color: var(--ink); width: 36px; height: 36px; padding: 0; cursor: pointer; font-size: 18px">−</button>
+<span style="font-size: 18px; font-weight: 700; min-width: 24px; text-align: center; font-variant-numeric: tabular-nums">{{z.pend}}</span>
+<button type="button" class="abtn" onClick="{{z.morePend}}" aria-label="Une penderie de plus" style="background: transparent; color: var(--ink); width: 36px; height: 36px; padding: 0; cursor: pointer; font-size: 18px">+</button>
+</div>
+</sc-if>
+<div style="display: flex; align-items: center; gap: 12px">
+<span style="flex: 1; font-size: 14px; font-weight: 600">Tablettes <span style="font-weight: 400; font-size: 12px; color: var(--ink-muted)">réglables</span></span>
+<button type="button" class="abtn" onClick="{{z.lessTab}}" aria-label="Une tablette de moins" style="background: transparent; color: var(--ink); width: 36px; height: 36px; padding: 0; cursor: pointer; font-size: 18px">−</button>
+<span style="font-size: 18px; font-weight: 700; min-width: 24px; text-align: center; font-variant-numeric: tabular-nums">{{z.tab}}</span>
+<button type="button" class="abtn" onClick="{{z.moreTab}}" aria-label="Une tablette de plus" style="background: transparent; color: var(--ink); width: 36px; height: 36px; padding: 0; cursor: pointer; font-size: 18px">+</button>
+</div>
+<sc-if value="{{z.showOrdre}}" hint-placeholder-val="{{false}}">
+<div class="seg">
+<sc-for list="{{z.ordreOpts}}" as="o" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{o.on}}" onClick="{{o.pick}}" style="background: {{o.bg}}; color: {{o.fg}}">{{o.label}}</button>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{z.hasCases}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px; font-weight: 600">Tiroirs <span style="font-weight: 400; color: var(--ink-muted)">cliquez une case pour y mettre un tiroir</span></span>
+<div style="display: flex; flex-direction: column; gap: 3px; max-width: 200px">
+<sc-for list="{{z.segs}}" as="g" hint-placeholder-count="4">
+<button type="button" onClick="{{g.toggle}}" style="flex: 0 0 auto; height: {{g.flex}}px; display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 0 8px; background: {{g.bg}}; color: {{g.fg}}; border: {{g.bd}}; font: inherit; font-size: 11px; font-weight: 600; cursor: {{g.cur}}; text-align: left"><span>{{g.label}}</span><span style="font-family: var(--font-mono); font-weight: 400">{{g.mm}}</span></button>
+</sc-for>
+</div>
+<div style="display: flex; gap: 16px; font-size: 12px">
+<button type="button" onClick="{{z.allTir}}" style="background: none; border: 0; padding: 0; font: inherit; color: var(--ink); text-decoration: underline; cursor: pointer">Tiroirs partout</button>
+<button type="button" onClick="{{z.noTir}}" style="background: none; border: 0; padding: 0; font: inherit; color: var(--ink); text-decoration: underline; cursor: pointer">Aucun tiroir</button>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span class="lbl">Éclairage LED 3000 K</span>
+<div class="seg">
+<sc-for list="{{ledOpts}}" as="p" hint-placeholder-count="3">
+<button type="button" aria-pressed="{{p.on}}" onClick="{{p.pick}}" style="background: {{p.bg}}; color: {{p.fg}}">{{p.label}}</button>
+</sc-for>
+</div>
+<span style="font-size: 12px; line-height: 18px; color: var(--ink-muted)">S'allume à l'ouverture de la porte. Transformateur et contacteur compris.</span>
+</div>
+<div style="display: flex; flex-direction: column">
+<sc-for list="{{selLines}}" as="l" hint-placeholder-count="4">
+<div class="ln"><span><span class="ref">{{l.ref}}</span>{{l.label}}</span><b>{{l.price}}</b></div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isStep4}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<h2 style="margin: 0; font-size: 22px; line-height: 28px">Récapitulatif</h2>
+<sc-for list="{{recap}}" as="c" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; border-top: 2px solid var(--line-strong); padding-top: 8px">
+<div style="display: flex; justify-content: space-between; gap: 12px; padding-bottom: 6px"><b style="font-family: var(--font-mono)">{{c.id}}</b><span style="font-size: 13px; color: var(--ink-muted)">{{c.desc}}</span></div>
+<sc-for list="{{c.lines}}" as="l" hint-placeholder-count="4">
+<div class="ln"><span><span class="ref">{{l.ref}}</span>{{l.label}}</span><b>{{l.price}}</b></div>
+</sc-for>
+<div class="ln" style="font-weight: 700"><span>Sous-total {{c.id}}</span><b>{{c.sub}}</b></div>
+</div>
+</sc-for>
+<sc-for list="{{globalRows}}" as="l" hint-placeholder-count="1">
+<div class="ln"><span><span class="ref">{{l.ref}}</span>{{l.label}}</span><b>{{l.price}}</b></div>
+</sc-for>
+<sc-if value="{{hasQuote}}" hint-placeholder-val="{{false}}">
+<p style="margin: 0; font-size: 12px; line-height: 18px; color: var(--ink-muted)">Les usinages marqués [PRIX] sont chiffrés sur le BAT.</p>
+</sc-if>
+<div id="bat" style="display: flex; flex-direction: column; gap: 14px; border-top: 2px solid var(--line-strong); padding-top: 16px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h3 style="margin: 0; font-size: 18px; line-height: 24px">Demander mon BAT</h3>
+<p style="margin: 0; font-size: 13px; line-height: 20px; color: var(--ink-muted)">Votre configuration et son prix nous sont transmis avec vos coordonnées. Nous revenons vers vous avec le BAT sous 24 h ouvrées.</p>
+</div>
+<sc-if value="{{formOpen}}" hint-placeholder-val="{{true}}">
+<form name="bat" onSubmit="{{submitBat}}" noValidate style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600"><span>Prénom <span style="color: var(--signal)">*</span></span><input type="text" name="prenom" autocomplete="given-name" required onChange="{{f_prenom}}" style="font: inherit; font-size: 15px; line-height: 20px; padding: 10px 12px; border: 1px solid var(--line); border-bottom: 2px solid var(--ink); border-radius: 0; background: var(--surface-raised); color: var(--ink); min-width: 0; width: 100%; box-sizing: border-box"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600"><span>Nom <span style="color: var(--signal)">*</span></span><input type="text" name="nom" autocomplete="family-name" required onChange="{{f_nom}}" style="font: inherit; font-size: 15px; line-height: 20px; padding: 10px 12px; border: 1px solid var(--line); border-bottom: 2px solid var(--ink); border-radius: 0; background: var(--surface-raised); color: var(--ink); min-width: 0; width: 100%; box-sizing: border-box"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600"><span>Société <span style="color: var(--signal)">*</span></span><input type="text" name="societe" autocomplete="organization" required onChange="{{f_societe}}" style="font: inherit; font-size: 15px; line-height: 20px; padding: 10px 12px; border: 1px solid var(--line); border-bottom: 2px solid var(--ink); border-radius: 0; background: var(--surface-raised); color: var(--ink); min-width: 0; width: 100%; box-sizing: border-box"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600"><span>E-mail <span style="color: var(--signal)">*</span></span><input type="email" name="email" autocomplete="email" required onChange="{{f_email}}" style="font: inherit; font-size: 15px; line-height: 20px; padding: 10px 12px; border: 1px solid var(--line); border-bottom: 2px solid var(--ink); border-radius: 0; background: var(--surface-raised); color: var(--ink); min-width: 0; width: 100%; box-sizing: border-box"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600"><span>Téléphone <span style="color: var(--signal)">*</span></span><input type="tel" name="telephone" autocomplete="tel" required onChange="{{f_telephone}}" style="font: inherit; font-size: 15px; line-height: 20px; padding: 10px 12px; border: 1px solid var(--line); border-bottom: 2px solid var(--ink); border-radius: 0; background: var(--surface-raised); color: var(--ink); min-width: 0; width: 100%; box-sizing: border-box"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; grid-column: 1 / -1"><span>Photos du chantier <span style="font-weight: 400; color: var(--ink-muted)">(3 au plus, facultatif)</span></span><input type="file" name="photos" accept="image/*" multiple onChange="{{f_photos}}" style="font: inherit; font-size: 13px; padding: 10px 12px; border: 1px dashed var(--ink-muted); background: var(--surface-raised); color: var(--ink); min-width: 0; width: 100%; box-sizing: border-box"><span style="font-weight: 400; font-size: 12px; color: var(--ink-muted)">{{photoNote}}</span></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; grid-column: 1 / -1">Message<textarea name="message" rows="3" onChange="{{f_message}}" style="font: inherit; font-size: 15px; line-height: 20px; padding: 10px 12px; border: 1px solid var(--line); border-bottom: 2px solid var(--ink); border-radius: 0; background: var(--surface-raised); color: var(--ink); min-width: 0; width: 100%; box-sizing: border-box; resize: vertical"></textarea></label>
+<sc-if value="{{formErr}}" hint-placeholder-val="{{false}}">
+<div style="grid-column: 1 / -1; border-left: 3px solid var(--signal); background: var(--surface); padding: 10px 12px; font-size: 13px; line-height: 20px; font-weight: 600">{{formErr}}</div>
+</sc-if>
+<div style="grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<button type="submit" class="abtn" style="background: var(--ink); color: var(--surface-raised); border-color: var(--ink); cursor: pointer">{{sendLabel}}</button>
+<span style="font-size: 12px; line-height: 18px; color: var(--ink-muted)">* champs obligatoires</span>
+</div>
+</form>
+</sc-if>
+<sc-if value="{{formDone}}" hint-placeholder-val="{{false}}">
+<div role="status" style="border-left: 3px solid var(--signal); background: var(--surface); padding: 14px 16px; font-size: 14px; line-height: 22px"><b>Demande envoyée.</b> {{doneText}}</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{hasErrors}}" hint-placeholder-val="{{false}}">
+<div style="border-left: 3px solid var(--signal); background: var(--surface); padding: 12px 14px; font-size: 13px; line-height: 20px; font-weight: 600">{{errorText}}</div>
+</sc-if>
+</div>
+</div>
+</div>
+</section>
+
+<section data-theme="encre" style="background: var(--surface); color: var(--ink); position: sticky; bottom: 0">
+<div class="wrap" style="display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; padding-top: 14px; padding-bottom: 14px">
+<div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap">
+<span style="font-size: 30px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums">{{totalHt}}</span>
+<span style="font-size: 14px; font-weight: 600; color: var(--ink-muted)">HT · {{totalTtc}} TTC · prêts 72 h après BAT</span>
+</div>
+<div style="display: flex; gap: 10px">
+<sc-if value="{{canBack}}" hint-placeholder-val="{{false}}">
+<button type="button" class="abtn" onClick="{{back}}" style="background: transparent; color: var(--ink); border-color: var(--ink); cursor: pointer">Retour</button>
+</sc-if>
+<button type="button" class="abtn" onClick="{{next}}" style="background: var(--signal); color: #fff; border-color: var(--signal); cursor: pointer">{{nextLabel}}</button>
+</div>
+</div>
+</section>
+
+<sc-if value="{{modalOpen}}" hint-placeholder-val="{{false}}">
+<div role="dialog" aria-modal="true" aria-label="Tous les décors" style="position: fixed; inset: 0; z-index: 50; background: rgba(20,23,26,0.55); display: flex; align-items: center; justify-content: center; padding: 16px; box-sizing: border-box">
+<div style="background: var(--surface-raised); width: 100%; max-width: 1180px; max-height: 100%; overflow: auto; display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 20px; border-bottom: 1px solid var(--line)">
+<div style="display: flex; flex-direction: column; gap: 2px"><span class="lbl">Tous les décors Egger</span><span style="font-size: 18px; font-weight: 700">{{decorLabel}}</span></div>
+<button type="button" onClick="{{closeModal}}" aria-label="Fermer" style="width: 44px; height: 44px; border: 1px solid var(--line-strong); background: transparent; cursor: pointer; font-size: 22px; line-height: 1">×</button>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 24px; padding: 20px">
+<figure style="flex: 999 1 520px; min-width: 0; margin: 0; display: flex; flex-direction: column; gap: 8px">
+<svg viewBox="0 0 1024 572" role="img" aria-label="Dressing simulé en {{decorLabel}}" style="width: 100%; height: auto; display: block; aspect-ratio: 1024 / 572">
+<defs>
+<pattern id="cf-tex" patternUnits="userSpaceOnUse" width="{{sim.pw}}" height="{{sim.ph}}" patternTransform="{{sim.rot}}"><image href="/_blob/c1953859763d6ff50c588126fae72f83" x="{{sim.ix}}" y="{{sim.iy}}" width="{{sim.iw}}" height="{{sim.ih}}" preserveAspectRatio="none"></image></pattern>
+<mask id="cf-mask"><image href="/_blob/80e7c401fc67823c3cc386cd2dd3e2d7" x="0" y="0" width="1024" height="572"></image></mask>
+</defs>
+<image href="{{photo}}" x="0" y="0" width="1024" height="572"></image>
+<g mask="url(#cf-mask)" opacity="{{sim.show}}" style="isolation: isolate">
+<rect x="0" y="0" width="1024" height="572" fill="{{sim.fill}}"></rect>
+<image href="/_blob/0e28e6284229e44e3dba29e73212ca2c" x="0" y="0" width="1024" height="572" style="mix-blend-mode: multiply"></image>
+</g>
+</svg>
+<figcaption style="font-family: var(--font-mono); font-size: 11px; color: var(--ink-muted)">{{decorType}} · simulation sur un dressing BAAM, rendu indicatif</figcaption>
+</figure>
+<div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+<div role="tablist" aria-label="Famille de décors" style="display: flex; gap: 6px; flex-wrap: wrap">
+<sc-for list="{{famBtns}}" as="f" hint-placeholder-count="4">
+<button type="button" role="tab" aria-selected="{{f.on}}" onClick="{{f.pick}}" style="font: 600 12px/1 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; padding: 10px 12px; border: 1px solid var(--line-strong); background: {{f.bgc}}; color: {{f.fg}}; cursor: pointer">{{f.label}} <span style="opacity: 0.6">{{f.n}}</span></button>
+</sc-for>
+</div>
+<div role="radiogroup" aria-label="Décor" style="display: flex; gap: 8px; flex-wrap: wrap; max-height: 340px; overflow-y: auto; padding: 4px">
+<sc-for list="{{allDecors}}" as="d" hint-placeholder-count="24">
+<button type="button" role="radio" aria-checked="{{d.on}}" title="{{d.code}} · {{d.name}}" aria-label="{{d.code}} {{d.name}}" onClick="{{d.pick}}" style="width: 34px; height: 34px; flex: none; padding: 0; border-radius: 50%; border: 1px solid var(--line); cursor: pointer; background: {{d.bg}}; outline: {{d.ring}}; outline-offset: 2px"></button>
+</sc-for>
+</div>
+<button type="button" class="abtn" onClick="{{closeModal}}" style="background: var(--signal); color: #fff; border-color: var(--signal); cursor: pointer; align-self: flex-start">Choisir ce décor</button>
+</div>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"logo":{"editor":"text","default":"","section":"Logo"},"logoHeight":{"editor":"int","default":32,"min":16,"max":64,"unit":"px","section":"Logo"},"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var self = this, st = this.state || {};
+    var set = function (o) { self.setState(o); };
+    /* ---------- grilles (prix HT) ---------- */
+    var C_ROWS = [[800,1200],[1201,1600],[1601,2000],[2001,2200],[2201,2500]], C_GRID = [[279,319,349,379],[309,349,389,409],[339,379,419,449],[389,429,479,499],[569,639,679,799]];
+    var S_ROWS = [[300,400],[401,600],[601,800]], S_GRID = [[129,149,159,179],[139,159,179,199],[159,179,199,209]];
+    var V_ROWS = [[800,1200],[1201,1600],[1601,2000],[2001,2200],[2201,2400],[2401,2700]], V_GRID = [[69,69,79],[69,79,89],[79,89,99],[89,99,109],[99,109,119],[109,119,129]], V_SUR = [39,39,49];
+    var PX = { ledFirst: 183, ledMl: 45, penderieMl: 59, telescop: 89, tab: 29, tabL: 39, sep: 79, tiroir: 123, plinthe: 21, taquets: 19 };
+    var PANEL = 19, FEET = Math.min(200, Math.max(50, Number((this.state || {}).feet) || 100));
+    var col4 = function (L) { return L <= 500 ? 0 : L <= 800 ? 1 : L <= 1000 ? 2 : L <= 1200 ? 3 : -1; };
+    var col3 = function (L) { return L <= 300 ? 0 : L <= 450 ? 1 : L <= 600 ? 2 : -1; };
+    var rowOf = function (rows, h) { for (var i = 0; i < rows.length; i++) if (h >= rows[i][0] && h <= rows[i][1]) return i; return -1; };
+    var pick = function (rows, grid, cf, w, h) { var r = rowOf(rows, h), c = cf(w); return r < 0 || c < 0 ? NaN : grid[r][c]; };
+    var pC = function (w, h) { return pick(C_ROWS, C_GRID, col4, w, h); }, pS = function (w, h) { return pick(S_ROWS, S_GRID, col4, w, h); }, pV = function (w, h) { return pick(V_ROWS, V_GRID, col3, w, h); };
+    var sum = function (a) { return a.reduce(function (x, y) { return x + y; }, 0); };
+    var eur = function (n) { return n == null ? '[PRIX]' : String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' €'; };
+    var mm = function (n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' mm'; };
+
+    /* ---------- état ---------- */
+    var wall = st.wall || 2400, ceiling = st.ceiling || 2500, depth = st.depth || 600, step = Math.min(3, st.step || 0);
+    var minN = Math.max(1, Math.ceil(wall / 1200)), maxN = Math.max(minN, Math.min(10, Math.floor(wall / 300)));
+    var n = Math.min(maxN, Math.max(minN, st.n || Math.max(1, Math.ceil(wall / 1000))));
+    var fixedW = st.w || {}, fixedSum = 0, freeIdx = [];
+    for (var i = 0; i < n; i++) { if (fixedW[i] != null) fixedSum += fixedW[i]; else freeIdx.push(i); }
+    var freeTot = wall - fixedSum, base = freeIdx.length ? Math.floor(freeTot / freeIdx.length) : 0, rem = freeIdx.length ? freeTot - base * freeIdx.length : 0;
+    var widths = []; for (var i = 0; i < n; i++) widths.push(fixedW[i] != null ? fixedW[i] : base + (freeIdx.indexOf(i) >= freeIdx.length - rem ? 1 : 0));
+    var setW = function (i) { return function (e) { var v = Math.round(Number(e && e.target ? e.target.value : e)); if (isNaN(v)) return; var o = Object.assign({}, fixedW); o[i] = Math.min(1200, Math.max(300, v)); var nf = 0; for (var k = 0; k < n; k++) if (o[k] == null) nf++; if (!nf) { var last = n - 1 === i ? 0 : n - 1; delete o[last]; } set({ w: o }); }; };
+    var freeW = function (i) { return function () { var o = Object.assign({}, fixedW); delete o[i]; set({ w: o }); }; };
+    var DEF = ['penderie', 'tablettes', 'double'];
+    var PRESETS = { penderie: { label: 'Penderie', sep: false, zones: [{ pend: 1, tab: 1, tir: [] }] }, double: { label: 'Double penderie', sep: false, zones: [{ pend: 2, tab: 0, tir: [] }] }, tablettes: { label: 'Tablettes', sep: false, zones: [{ pend: 0, tab: 5, tir: [] }] }, mixte: { label: 'Tablettes + penderie', sep: false, zones: [{ pend: 1, tab: 3, ordre: 'haut', tir: [] }] } };
+    var clone = function (o) { return JSON.parse(JSON.stringify(o)); };
+    var cabs = widths.map(function (w, i) { var c = (st.cabs || {})[i] || {}; var preset = c.preset || DEF[i % 3];
+      var leaves = c.leaves0 != null ? c.leaves0 : (c.doorType === 'none' ? 0 : (c.leaves || 2));
+      var led = typeof c.led === 'string' ? c.led : (c.led != null ? (c.led ? 'h' : 'none') : (i % 3 === 0 ? 'h' : 'none'));
+      return { preset: preset, int: c.int || clone({ sep: PRESETS[preset].sep, zones: PRESETS[preset].zones }), surInt: c.surInt || { sep: false, zones: [{ pend: 0, tab: 0, tir: [] }] }, leaves: leaves, doorMode: c.doorMode || (c.doorType && c.doorType !== 'none' ? c.doorType : 'full'), led: led }; });
+    var sel = Math.min(n - 1, st.sel || 0), partSel = st.part === 'haut' ? 'haut' : 'bas';
+    var plinthe = st.plinthe !== false, prises = 0, plex = false;
+    var setCab = function (i, o) { var all = Object.assign({}, st.cabs || {}); all[i] = Object.assign({}, cabs[i], o); set({ cabs: all }); };
+
+    /* ---------- géométrie : caisson seul ou caisson + partie haute ---------- */
+    var full = st.full !== false, H = full ? ceiling - 10 : ceiling, P = depth, errors = [];
+    if (wall < 300 || wall > 12000) errors.push('Largeur du mur : entre 300 et 12 000 mm.');
+    if (widths.some(function (w) { return w < 300 || w > 1200; })) errors.push('Chaque caisson doit faire entre 300 et 1200 mm : ajustez les largeurs ou le nombre de caissons.');
+    if (ceiling < 1000 || ceiling > 4000) errors.push('Hauteur du projet : entre 1000 et 4000 mm.');
+    if (!full && ceiling > 2500) errors.push('Sans pleine hauteur, le caisson fait 2500 mm maximum : cochez « Pleine hauteur » pour ajouter un sur-caisson.');
+    var Hc = H, Hs = 0, split = false, reason = '';
+    if (!errors.length && full) {
+      var limit = ceiling - 10, fits = function (h) { return Math.hypot(h, P) <= limit; };
+      var single = H <= 2500 && fits(H), costSingle = single ? sum(widths.map(function (w) { return pC(w, H); })) : Infinity, best = null;
+      for (var s = 300; s <= 800; s += 10) { var hc = H - s; if (hc < 800 || hc > 2500 || !fits(hc)) continue; var cost = sum(widths.map(function (w) { return pC(w, hc) + pS(w, s); })); if (!best || cost < best.cost) best = { s: s, hc: hc, cost: cost }; }
+      if (!(single && (!best || best.cost >= costSingle))) {
+        if (!best) errors.push(H > 3300 ? 'Au-delà de 3300 mm de haut, le meuble se fait sur devis.' : 'Ce meuble ne peut pas être découpé : contactez-nous.');
+        else { split = true; Hc = best.hc; Hs = best.s; reason = single ? 'cheaper' : (H > 2500 ? 'tall' : 'diag'); }
+      }
+    }
+    var Ht = split ? Hc + Hs : Hc;
+
+    /* ---------- prix ---------- */
+    var SPAN = 900;
+    var HANG1 = 1100, HANG2 = 880, MAXD = 450;
+    var zoneLayout = function (z, bot, top) {
+      var hNeed = z.pend === 2 ? 2 * HANG2 + PANEL : z.pend === 1 ? HANG1 : 0, L = { shelves: [], cases: [], hangs: [] };
+      L.hregs = [];
+      var addHang = function (a, b) { L.hregs.push([a, b]); if (z.pend === 2) { var mid = a + (b - a) / 2; L.hangs.push([mid - 60, mid - a - 120]); L.shelves.push(mid); L.hangs.push([b - 60, b - mid - PANEL - 140]); } else L.hangs.push([b - 60, Math.min(1000, b - a - 120)]); };
+      if (!z.pend) { var hh = (top - bot + 2 * PANEL) / (z.tab + 1), prev = bot; for (var t = 1; t <= z.tab; t++) { var y = bot - PANEL + t * hh - PANEL / 2; L.shelves.push(y); L.cases.push([prev, y]); prev = y + PANEL; } L.cases.push([prev, top]); }
+      else if (!z.tab) addHang(bot, top);
+      else if (z.ordre === 'haut') { var pb = Math.max(bot + 150 * z.tab, top - hNeed), sp0 = (pb - PANEL / 2 - (bot - PANEL)) / z.tab, prv = bot; for (var t3 = 1; t3 <= z.tab; t3++) { var y3 = bot - PANEL + t3 * sp0 - PANEL / 2; L.shelves.push(y3); L.cases.push([prv, y3]); prv = y3 + PANEL; } addHang(pb, top); }
+      else { var b2 = Math.max(bot + 150, Math.min(top - 150 * z.tab, bot + hNeed)), sp = (top + PANEL - (b2 + PANEL / 2)) / z.tab; addHang(bot, b2); for (var t2 = 0; t2 < z.tab; t2++) { var y2 = b2 + t2 * sp; L.shelves.push(y2); L.cases.push([y2 + PANEL, t2 < z.tab - 1 ? b2 + (t2 + 1) * sp : top]); } }
+      L.tir = L.cases.map(function (cs, q) { return !!(z.tir || [])[q] && cs[1] - cs[0] <= MAXD; });
+      return L;
+    };
+    var effInt = function (i) { var it = cabs[i].int; if (!it.sep && it.zones.length === 1 && it.zones[0].pend === 0 && it.zones[0].tab > 0 && widths[i] - 2 * PANEL > SPAN) return { sep: true, auto: true, zones: [it.zones[0], it.zones[0]] }; return { sep: it.sep, auto: false, zones: it.sep ? it.zones.slice(0, 2) : it.zones.slice(0, 1) }; };
+    var effSur = function (i) { var it = cabs[i].surInt; if (!it.sep && it.zones[0].tab > 0 && widths[i] - 2 * PANEL > SPAN) return { sep: true, auto: true, zones: [it.zones[0], it.zones[0]] }; return { sep: it.sep, auto: false, zones: it.sep ? it.zones.slice(0, 2) : it.zones.slice(0, 1) }; };
+    var linesOf = function (i) {
+      var w = widths[i], c = cabs[i], pr = effInt(i), L = [];
+      L.push({ ref: 'DR-C', label: 'Caisson ' + w + ' × ' + Hc + ' × ' + P, p: pC(w, Hc) });
+      if (split) L.push({ ref: 'DR-S', label: 'Partie haute ' + w + ' × ' + Hs, p: pS(w, Hs) });
+      var dt = c.leaves ? c.doorMode : 'none'; if (!split && dt !== 'none') dt = 'full'; if (dt === 'full' && split && Ht > 2700) dt = 'split';
+      var nd = c.leaves === 1 && w > 600 ? 2 : Math.max(1, c.leaves), dw = w / nd, vl = function (k) { return k > 1 ? k + ' vantaux ' : '1 vantail '; };
+      if (dt === 'full') L.push({ ref: 'DR-V', label: vl(nd) + Math.round(dw) + ' × ' + Ht + (split ? ' pleine hauteur' : ''), p: nd * pV(dw, Ht) });
+      if (dt === 'split' || dt === 'bas') L.push({ ref: 'DR-V', label: vl(nd) + Math.round(dw) + ' × ' + Hc + ' (caisson)', p: nd * pV(dw, Hc) });
+      if (dt === 'split' || dt === 'haut') L.push({ ref: 'DR-V', label: vl(nd) + Math.round(dw) + ' × ' + Hs + ' (partie haute)', p: nd * V_SUR[col3(dw)] });
+      var zw = (w - 2 * PANEL - (pr.sep ? PANEL : 0)) / (pr.sep ? 2 : 1), tubes = 0, tabs = 0, tirs = 0, userTabs = 0;
+      pr.zones.forEach(function (z) { var Lz = zoneLayout(z, FEET + PANEL, Hc - PANEL); tubes += z.pend; tabs += z.tab + (z.pend === 2 ? 1 : 0); userTabs += z.tab; tirs += Lz.tir.filter(Boolean).length; });
+      if (tubes) { if (P <= 540) L.push({ ref: 'E', label: 'Penderie télescopique × ' + tubes, p: tubes * PX.telescop }); else { var ml = tubes * zw / 1000; L.push({ ref: 'E', label: 'Penderie tube alu ' + ml.toFixed(2).replace('.', ',') + ' ml', p: Math.round(ml * PX.penderieMl) }); } }
+      if (tabs) L.push({ ref: 'E', label: 'Tablette' + (tabs > 1 ? 's' : '') + ' × ' + tabs, p: tabs * (zw > 800 ? PX.tabL : PX.tab) });
+      if (userTabs) L.push({ ref: 'E', label: 'Perçages pour taquets', p: PX.taquets });
+      if (pr.sep) L.push({ ref: 'E', label: pr.auto ? 'Séparateur vertical (ajouté : tablettes de plus de 900 mm)' : 'Séparateur vertical', p: PX.sep });
+      if (tirs) L.push({ ref: 'E', label: 'Tiroirs Blum Merivobox × ' + tirs, p: tirs * PX.tiroir });
+      if (c.led !== 'none') { var lm = Math.max(1, Math.ceil(c.led === 'h' ? w / 1000 : 2 * Hc / 1000)); L.push({ ref: 'D', label: 'Néon LED 3000 K ' + lm + ' ml, ' + (c.led === 'h' ? 'bandeau haut' : 'montants'), p: PX.ledFirst + (lm - 1) * PX.ledMl }); }
+      if (split) { var sp = effSur(i), szw = (w - 2 * PANEL - (sp.sep ? PANEL : 0)) / (sp.sep ? 2 : 1), stn = 0, stir = 0;
+        sp.zones.forEach(function (z) { stn += z.tab; stir += zoneLayout(z, Hc + PANEL, Ht - PANEL).tir.filter(Boolean).length; });
+        if (stn) L.push({ ref: 'E', label: 'Sur-caisson : tablette' + (stn > 1 ? 's' : '') + ' × ' + stn, p: stn * (szw > 800 ? PX.tabL : PX.tab) });
+        if (stn) L.push({ ref: 'E', label: 'Sur-caisson : perçages pour taquets', p: PX.taquets });
+        if (sp.sep) L.push({ ref: 'E', label: sp.auto ? 'Sur-caisson : séparateur vertical (ajouté : tablettes de plus de 900 mm)' : 'Sur-caisson : séparateur vertical', p: PX.sep });
+        if (stir) L.push({ ref: 'E', label: 'Sur-caisson : tiroir' + (stir > 1 ? 's' : '') + ' Blum Merivobox × ' + stir, p: stir * PX.tiroir }); }
+      if (plex) L.push({ ref: 'U', label: 'Fraisage bas arrière (plinthe existante)', p: null });
+      return L;
+    };
+    var per = errors.length ? [] : widths.map(function (_, i) { return linesOf(i); });
+    var glob = []; if (plinthe) glob.push({ ref: 'E', label: 'Plinthe ' + (wall / 1000).toFixed(2).replace('.', ',') + ' ml', p: Math.round(wall / 1000 * PX.plinthe) });
+    if (prises) glob.push({ ref: 'U', label: 'Perçage prise ou interrupteur × ' + prises, p: null });
+    var subOf = function (L) { return sum(L.map(function (l) { return l.p || 0; })); };
+    var ht = sum(per.map(subOf)) + subOf(glob);
+    var hasQuote = per.some(function (L) { return L.some(function (l) { return l.p == null; }); }) || glob.some(function (l) { return l.p == null; });
+    var fmtL = function (L) { return L.map(function (l) { return { ref: l.ref, label: l.label, price: eur(l.p) }; }); };
+
+    /* ---------- dessin (mm, y vers le bas depuis le plafond) ---------- */
+    var Y = function (h) { return ceiling - h; };
+    var DECORS = [["H1384","Chêne Casella blanc","bois","#E1CFBD",58,"Chêne"],["H3165","Chêne Vicenza clair","bois","#D8C0A6",84,"Chêne"],["H3152","Chêne Vicenza blanchi","bois","#E2BC94",79,"Chêne"],["H1388","Chêne Casella sable","bois","#D5BCA3",61,"Chêne"],["H1312","Chêne Whiteriver cérusé sable","bois","#C8B7A2",45,"Chêne"],["H3349","Chêne Kaisersberg","bois","#CEB48F",100,"Chêne"],["H3311","Chêne Cuneo blanchi","bois","#D2B291",94,"Chêne"],["H3157","Chêne Vicenza","bois","#D0B188",82,"Chêne"],["H1176","Chêne Halifax blanc","bois","#C4B29B",33,"Chêne"],["H1334","Chêne Sorano clair","bois","#D7AF7F",50,"Chêne"],["H1367","Chêne Casella naturel clair","bois","#CEB08B",55,"Chêne"],["H3131","Chêne Davos naturel","bois","#C4AE89",76,"Chêne"],["H3309","Chêne Gladstone sable","bois","#C6A988",93,"Chêne"],["H1362","Chêne Baronia clair","bois","#C3A88F",54,"Chêne"],["H305","Chêne Tonsberg naturel","bois","#BDA58B",27,"Chêne"],["H1145","Chêne Bardolino naturel","bois","#C0A385",32,"Chêne"],["H3322","Chêne Rovato naturel clair","bois","#C0A37E",96,"Chêne"],["H3359","Chêne Davenport naturel clair","bois","#C1A17D",101,"Chêne"],["H3170","Chêne Kendal naturel","bois","#BBA07F",85,"Chêne"],["H1377","Chêne d'Orléans sable","bois","#B7A088",56,"Chêne"],["H3303","Chêne Hamilton naturel","bois","#BF9E70",92,"Chêne"],["H1142","Chêne Sacramento marron","bois","#BB9A74",30,"Chêne"],["H1316","Chêne Bookmatch","bois","#C19870",47,"Chêne"],["H3368","Chêne de Lancaster naturel","bois","#C3995F",102,"Chêne"],["H1318","Chêne sauvage naturel","bois","#BF976B",48,"Chêne"],["H3326","Chêne Gladstone naturel","bois","#B2997B",98,"Chêne"],["H3146","Chêne Lorenzo sable","bois","#AA9A88",78,"Chêne"],["H1357","Chêne Sprée grège","bois","#AB977F",53,"Chêne"],["H1180","Chêne Halifax naturel","bois","#B4946F",34,"Chêne"],["H3395","Chêne Corbridge naturel","bois","#BD925F",103,"Chêne"],["H3171","Chêne Kendal huilé","bois","#B48F64",86,"Chêne"],["H1385","Chêne Casella naturel","bois","#B58E67",59,"Chêne"],["H1143","Chêne Sacramento gris","bois","#A2907F",31,"Chêne"],["H3317","Chêne Cuneo brun","bois","#AD8B67",95,"Chêne"],["H3156","Chêne Corbridge gris","bois","#9E8874",81,"Chêne"],["H1113","Chêne du Kansas marron","bois","#A88662",29,"Chêne"],["H1399","Chêne Denver chamois","bois","#99856F",62,"Chêne"],["H3158","Chêne Vicenza gris","bois","#918172",83,"Chêne"],["H3332","Chêne Nebraska gris","bois","#8B7967",99,"Chêne"],["H1313","Chêne Whiteriver cérusé gris","bois","#7D726C",46,"Chêne"],["H1303","Chêne Belmont marron","bois","#896D55",43,"Chêne"],["H1386","Chêne Casella marron","bois","#8F6B4C",60,"Chêne"],["H1344","Chêne Sherman cognac","bois","#926B41",51,"Chêne"],["H3133","Chêne Davos chamois","bois","#866C57",77,"Chêne"],["H1181","Chêne Halifax tabac","bois","#876C50",35,"Chêne"],["H3398","Chêne Kendal cognac","bois","#91663E",104,"Chêne"],["H1379","Chêne d'Orléans taupe","bois","#7A6859",57,"Chêne"],["H3176","Chêne Halifax zinc","bois","#81644A",87,"Chêne"],["H1330","Chêne Santa Fé vintage","bois","#79634D",49,"Chêne"],["H3154","Chêne Charleston châtain foncé","bois","#73573E",80,"Chêne"],["H3003","Chêne Norwich","bois","#63594F",73,"Chêne"],["H309","Chêne Tonsberg marron foncé","bois","#70523E",28,"Chêne"],["H2033","Chêne de Hunton foncé","bois","#725134",72,"Chêne"],["H3325","Chêne Gladstone tabac","bois","#615042",97,"Chêne"],["H1346","Chêne Sherman anthracite","bois","#5B4C46",52,"Chêne"],["H1199","Chêne thermo noir","bois","#2D2119",36,"Chêne"],["H1715","Noyer Parona","bois","#C49874",69,"Noyer"],["H3700","Noyer du Pacifique naturel","bois","#B2926E",111,"Noyer"],["H7604","Noyer Dimaro naturel","bois","#A68B74",120,"Noyer"],["H3734","Noyer de Bourgogne naturel","bois","#8B6039",115,"Noyer"],["H3710","Noyer Carini naturel","bois","#795F48",113,"Noyer"],["H1714","Noyer Lincoln","bois","#724F33",68,"Noyer"],["H3702","Noyer du Pacifique tabac","bois","#614B36",112,"Noyer"],["H7586","Noyer Alba tabac","bois","#64432D",119,"Noyer"],["H1307","Noyer Warmia brun","bois","#61402C",44,"Noyer"],["H3195","Fineline blanc","bois","#EAEAE3",89,"Fineline"],["H3197","Fineline gris moyen","bois","#9F968F",90,"Fineline"],["H3198","Fineline gris foncé","bois","#62584F",91,"Fineline"],["H3190","Fineline Metallic anthracite","bois","#3F3937",88,"Fineline"],["H1277","Acacia de Lakeland crème","bois","#DBC3A9",42,"Acacia"],["H1242","Acacia Sheffield naturel","bois","#CAA882",39,"Acacia"],["H1247","Acacia Sheffield graphite","bois","#4D3D36",40,"Acacia"],["H1225","Frêne Trondheim","bois","#EEEAE7",38,"Frêne"],["H1223","Frêne Seville","bois","#E7DACA",37,"Frêne"],["H1250","Frêne Navarra sable","bois","#D2BCA4",41,"Frêne"],["H3409","Mélèze naturel","bois","#E4C69C",107,"Mélèze"],["H3408","Mélèze brun thermo","bois","#846146",106,"Mélèze"],["H3406","Mélèze anthracite","bois","#534B43",105,"Mélèze"],["H3433","Pin Aland polaire","bois","#E6DCCA",109,"Pin"],["H1401","Pin Cascina","bois","#D4D0C4",63,"Pin"],["H3430","Pin Aland blanc","bois","#D1C3B2",108,"Pin"],["H3786","Bolivar Wood naturel","bois","#9E7C66",116,"Bolivar"],["H3787","Bolivar Wood brun","bois","#6F4E3A",117,"Bolivar"],["H1710","Châtaignier du Kentucky sable","bois","#C9B298",67,"Châtaignier"],["H1708","Châtaignier Brighton","bois","#B08E73",66,"Châtaignier"],["H1582","Hêtre du Tyrol","bois","#D3AE84",-1,"Hêtre"],["H1910","Hêtre Willow","bois","#D4A873",71,"Hêtre"],["H1732","Bouleau sable","bois","#E7CFAF",70,"Bouleau"],["H1636","Cerisier Locarno","bois","#AA7041",65,"Cerisier"],["H3012","Coco bolo","bois","#CAA97F",74,"Coco"],["H1487","Epicéa de Bramberg","bois","#B08E6B",64,"Epicéa"],["H3860","Erable américain champagne","bois","#E0CFBA",118,"Erable"],["H3043","Eucalyptus brun foncé","bois","#231814",75,"Eucalyptus"],["H3450","Fleetwood blanc","bois","#E2D3BC",110,"Fleetwood"],["H3730","Hickory naturel","bois","#C39F6E",114,"Hickory"],["U104","Blanc albâtre","unis","#FDF8E4",121,"Blanc"],["U222","Blanc écru","unis","#FDF1DB",132,"Blanc"],["U216","Blanc cassé","unis","#F8EFDE",131,"Blanc"],["U113","Beige sable","unis","#FBECCF",122,"Beige"],["U115","Beige carat","unis","#EFE1C6",124,"Beige"],["U707","Soie grise","unis","#E4E1DC",174,"Beige"],["U156","Beige rosé","unis","#E6D4C0",127,"Beige"],["U211","Beige amande","unis","#B3A092",130,"Beige"],["U250","Beige caramel","unis","#A6886C",134,"Beige"],["U232","Nude abricot","unis","#C79886",133,"Nude"],["U830","Nude terracotta","unis","#C7825B",189,"Nude"],["U131","Jaune citron","unis","#FDEC3A",126,"Jaune"],["U125","Jaune sable","unis","#E4BE8F",125,"Jaune"],["U114","Jaune tournesol","unis","#FBC000",123,"Jaune"],["U163","Jaune curry","unis","#E2AF3A",128,"Jaune"],["U332","Orange","unis","#F0822B",138,"Orange"],["U350","Orange de Sienne","unis","#CD6B00",140,"Orange"],["U335","Rouge oxyde","unis","#8A554F",139,"Rouge"],["U321","Rouge","unis","#C81518",135,"Rouge"],["U399","Rouge grenat","unis","#5F1D21",141,"Rouge"],["U323","Rouge cerise","unis","#9B091C",136,"Rouge"],["U444","Cassis","unis","#59393A",144,"Cassis"],["U325","Rose antique","unis","#C39A94",137,"Rose"],["U420","Lilas","unis","#947E93",142,"Lilas"],["U430","Violet","unis","#605881",143,"Violet"],["U500","Bleu glacier","unis","#AAD1D0",145,"Bleu"],["U522","Bleu horizon","unis","#A2BEE5",149,"Bleu"],["U540","Bleu denim","unis","#92A3B3",151,"Bleu"],["U505","Bleu nordique","unis","#639CB9",148,"Bleu"],["U502","Bleu brume","unis","#557085",146,"Bleu"],["U633","Bleu turquoise","unis","#008196",163,"Bleu"],["U545","Bleu baltique","unis","#455B68",152,"Bleu"],["U504","Bleu cosmique","unis","#38526D",147,"Bleu"],["U525","Bleu de Delft","unis","#005BA4",150,"Bleu"],["U565","Bleu océan","unis","#244D5F",154,"Bleu"],["U560","Bleu outremer","unis","#13326B",153,"Bleu"],["U599","Bleu indigo catégorie 6 pelliculé","unis","#252B37",157,"Bleu"],["U570","Bleu nuit","unis","#1B2751",155,"Bleu"],["U575","Bleu profond","unis","#102341",156,"Bleu"],["U608","Vert opale","unis","#C6D1C0",160,"Vert"],["U638","Vert sauge","unis","#BEB9A3",165,"Vert"],["U630","Vert pomme","unis","#A8C849",162,"Vert"],["U636","Vert fjord","unis","#8D9B9B",164,"Vert"],["U640","Vert olive","unis","#99966D",166,"Vert"],["U626","Vert kiwi","unis","#829748",161,"Vert"],["U604","Vert eucalyptus","unis","#737D74",158,"Vert"],["U669","Vert cèdre","unis","#7A7A70",170,"Vert"],["U646","Vert Niagara","unis","#3D7780",168,"Vert"],["U645","Vert agave","unis","#69674E",167,"Vert"],["U665","Vert minéral","unis","#50605F",169,"Vert"],["U606","Vert sapin","unis","#153F2B",159,"Vert"],["U699","Vert foncé","unis","#1C3427",171,"Vert"],["U775","Gris brume","unis","#E6E4D8",185,"Gris"],["U705","Gris angora","unis","#E2DCD0",173,"Gris"],["U708","Gris clair","unis","#D2CDC7",175,"Gris"],["U702","Gris cachemire","unis","#D6C8BB",172,"Gris"],["U750","Gris souris","unis","#D0C7B8",181,"Gris"],["U763","Gris perle","unis","#C2BFBA",183,"Gris"],["U201","Gris galet","unis","#B5AE9E",129,"Gris"],["U727","Gris argile","unis","#A59888",176,"Gris"],["U788","Gris arctique","unis","#979390",187,"Gris"],["U740","Gris argile foncé","unis","#8E8478",178,"Gris"],["U732","Gris macadam","unis","#838582",177,"Gris"],["U767","Gris cubanite","unis","#877D73",184,"Gris"],["U780","Gris céladon","unis","#737A82",186,"Gris"],["U960","Gris onyx","unis","#686765",191,"Gris"],["U963","Gris ombre","unis","#484848",193,"Gris"],["U755","Gris havane","unis","#4D4445",182,"Gris"],["U961","Gris graphite","unis","#3D3936",192,"Gris"],["U748","Brun sépia","unis","#675950",180,"Brun"],["U741","Brun taupe","unis","#5F564F",179,"Brun"],["U818","Marron foncé","unis","#54362B",188,"Brun"],["U989","Brun noir","unis","#36251E",194,"Brun"],["U899","Soft Black catégorie 4 pelliculé","unis","#3A3633",190,"Noir"],["U998","Reflet noir","unis","#020204",195,"Noir"],["U999","Noir","unis","#020204",196,"Noir"],["F186","Béton Chicago gris clair","matieres","#9A9693",1,"Béton"],["F187","Béton Chicago gris foncé","matieres","#5F5447",2,"Béton"],["F637","Chromix blanc","matieres","#E0D8C5",19,"Pierre"],["F661","Pierre Calcit beige","matieres","#D6C5B5",21,"Pierre"],["F685","Acapulco","matieres","#BBA485",23,"Pierre"],["F662","Pierre Calcit gris galet","matieres","#B2A49B",22,"Pierre"],["F638","Chromix argent","matieres","#A19990",20,"Pierre"],["F235","Ardoise Scivaro","matieres","#444243",4,"Pierre"],["F237","Ardoise Cupria","matieres","#302A27",5,"Pierre"],["F800","Marbre cristal","matieres","#EDEAE4",25,"Marbre"],["F812","Marbre Levanto blanc","matieres","#EBEAE6",26,"Marbre"],["F037","Travertin Taormina","matieres","#DBC9B7",0,"Marbre"],["F244","Marbre Candela anthracite","matieres","#595857",6,"Marbre"],["F206","Pietra Grigia noir","matieres","#322E2D",3,"Marbre"],["F765","Gris argent brossé","matieres","#A6A69E",24,"Métal"],["F527","Métal brossé or","matieres","#C39F6D",14,"Métal"],["F579","Métal brossé croisé","matieres","#9D8C7A",16,"Métal"],["F500","Metallic inox","matieres","#8B8380",13,"Métal"],["F323","Cobra bronze","matieres","#886C54",7,"Métal"],["F434","Acier brossé cubanite","matieres","#665B53",12,"Métal"],["F528","Métal brossé bronze","matieres","#6B503C",15,"Métal"],["F416","Textile beige","matieres","#D0C2A8",8,"Textile"],["F417","Textile gris","matieres","#C5BBAF",9,"Textile"],["F634","Canevas gris","matieres","#97928C",17,"Textile"],["F424","Lin taupe","matieres","#918879",10,"Textile"],["F433","Lin anthracite","matieres","#807A74",11,"Textile"],["F635","Canevas anthracite","matieres","#6B6764",18,"Textile"],["W1100","Blanc alpin","blancs","#FDFEF9",201,"Blanc"],["W1000","Blanc premium","blancs","#F9FBF0",200,"Blanc"],["W980","Blanc kaolin","blancs","#FBF9EC",198,"Blanc"],["W990","Blanc cristal","blancs","#FCF5E2",199,"Blanc"],["W960","Blanc classique","blancs","#F3F2EE",197,"Blanc"],["W1200","Blanc porcelaine","blancs","#F5F1E5",202,"Blanc"],["W908","Blanc craie","blancs","#EEEDE6",-1,"Blanc"]];
+    var TEX = {"H1384":[0,1],"H3165":[1,1],"H3152":[2,1],"H1388":[3,1],"H1312":[4,1],"H3349":[5,1],"H3311":[6,1],"H3157":[7,1],"H1176":[8,1],"H1334":[9,1],"H1367":[10,1],"H3131":[11,1],"H3309":[12,1],"H1362":[13,1],"H305":[14,1],"H1145":[15,1],"H3322":[16,1],"H3359":[17,1],"H3170":[18,1],"H1377":[19,1],"H3303":[20,1],"H1142":[21,1],"H1316":[22,1],"H3368":[23,1],"H1318":[24,1],"H3326":[25,1],"H3146":[26,1],"H1357":[27,1],"H1180":[28,1],"H3395":[29,1],"H3171":[30,1],"H1385":[31,1],"H1143":[32,1],"H3317":[33,1],"H3156":[34,1],"H1113":[35,1],"H1399":[36,1],"H3158":[37,1],"H3332":[38,1],"H1313":[39,1],"H1303":[40,1],"H1386":[41,1],"H1344":[42,1],"H3133":[43,1],"H1181":[44,1],"H3398":[45,1],"H1379":[46,1],"H3176":[47,1],"H1330":[48,1],"H3154":[49,1],"H3003":[50,1],"H309":[51,1],"H2033":[52,1],"H3325":[53,1],"H1346":[54,1],"H1199":[55,1],"H1715":[56,1],"H3700":[57,1],"H7604":[58,1],"H3734":[59,1],"H3710":[60,1],"H1714":[61,1],"H3702":[62,1],"H7586":[63,1],"H1307":[64,1],"H3195":[65,1],"H3197":[66,1],"H3198":[67,1],"H3190":[68,1],"H1277":[69,1],"H1242":[70,1],"H1247":[71,1],"H1225":[72,1],"H1223":[73,1],"H1250":[74,1],"H3409":[75,1],"H3408":[76,1],"H3406":[77,1],"H3433":[78,1],"H1401":[79,1],"H3430":[80,1],"H3786":[81,1],"H3787":[82,1],"H1710":[83,1],"H1708":[84,1],"H1910":[85,1],"H1732":[86,1],"H1636":[87,1],"H3012":[88,1],"H1487":[89,1],"H3860":[90,1],"H3043":[91,1],"H3450":[92,1],"H3730":[93,1],"F186":[94,0],"F187":[95,0],"F637":[96,0],"F661":[97,0],"F685":[98,0],"F662":[99,0],"F638":[100,0],"F235":[101,0],"F237":[102,0],"F800":[103,0],"F812":[104,0],"F037":[105,0],"F244":[106,0],"F206":[107,0],"F765":[108,0],"F527":[109,0],"F579":[110,0],"F500":[111,0],"F323":[112,0],"F434":[113,0],"F528":[114,0],"F416":[115,0],"F417":[116,0],"F634":[117,0],"F424":[118,0],"F433":[119,0],"F635":[120,0]};
+    var DMAP = {}; DECORS.forEach(function (d) { DMAP[d[0]] = d; });
+    var QUICK = ['W980', 'W1000', 'U702', 'U732', 'U999', 'U504', 'H3170', 'H1145', 'H3710', 'F186'];
+    var dsel = DMAP[st.decor] || DMAP.W980;
+    var fill = dsel[3], lumi = (function (h) { var r = parseInt(h.substr(1, 2), 16), g = parseInt(h.substr(3, 2), 16), b = parseInt(h.substr(5, 2), 16); return 0.2126 * r + 0.7152 * g + 0.0722 * b; })(fill);
+    var dark = lumi < 120, inner = dark ? 'rgba(255,255,255,.18)' : 'rgba(20,23,26,.07)';
+    var SPR = '/_blob/661814100ee30784cedacc903f28458f';
+    var swBg = function (d, sz) { return d[4] < 0 ? d[3] : 'url(' + SPR + ') ' + (-(d[4] % 15) * sz) + 'px ' + (-Math.floor(d[4] / 15) * sz) + 'px / ' + (15 * sz) + 'px ' + (14 * sz) + 'px no-repeat ' + d[3]; };
+    var swOf = function (d, sz) { var on = d[0] === dsel[0]; return { code: d[0], name: d[1], on: on ? 'true' : 'false', ring: on ? '2px solid var(--signal)' : 'none', bg: swBg(d, sz), pick: function () { set({ decor: d[0] }); } }; };
+    var famCur = st.mfam || dsel[2];
+    var GAR = ['#7F90A6', '#C8B79E', '#56627A', '#AE7A62', '#D4D0C7', '#4F5C52', '#9A6B78'];
+    var rects = [], lines = [], texts = [];
+    var R = function (x, y, w, h, stl, rx) { rects.push({ x: Math.round(x), y: Math.round(y), w: Math.max(0, Math.round(w)), h: Math.max(0, Math.round(h)), st: stl, rx: rx || 0 }); };
+    var Ln = function (x1, y1, x2, y2, stl) { lines.push({ x1: Math.round(x1), y1: Math.round(y1), x2: Math.round(x2), y2: Math.round(y2), st: stl }); };
+    var T = function (x, y, s, a, stl) { texts.push({ x: Math.round(x), y: Math.round(y), s: s, a: a || 'middle', tr: '', st: stl || 'fill: var(--ink); font-family: var(--font-mono); font-size: 64px' }); };
+    var stroke = 'fill: ' + fill + '; stroke: var(--ink); stroke-width: 8';
+    var hang = function (x0, w, top, len, k) { var nn = Math.max(3, Math.floor(w / 70)); Ln(x0 + 30, top, x0 + w - 30, top, 'stroke: var(--ink); stroke-width: 14; stroke-linecap: round'); for (var j = 0; j < nn; j++) { var gx = x0 + 50 + j * (w - 100) / Math.max(1, nn - 1); R(gx - 16, top + 20, 32, len * (0.7 + ((j * 37 + k * 11) % 30) / 100), 'fill: ' + GAR[(j + k) % GAR.length], 16); } };
+    var fr = [], selR = [], selBox = null, view = st.view === 'fac' ? 'fac' : 'int';
+    if (!errors.length) {
+      var x = 0;
+      widths.forEach(function (w, i) {
+        var c = cabs[i], pr = effInt(i);
+        R(x, Y(Hc), w, Hc, stroke);
+        R(x + PANEL * 2, Y(Hc - PANEL * 2), w - PANEL * 4, Hc - FEET - PANEL * 4, 'fill: ' + inner);
+        R(x, Y(FEET), w, FEET, 'fill: var(--line); stroke: var(--ink); stroke-width: 6');
+        if (split) { R(x, Y(Ht), w, Hs, stroke); R(x + PANEL * 2, Y(Ht - PANEL * 2), w - PANEL * 4, Hs - PANEL * 4, 'fill: ' + inner);
+          var sp2 = effSur(i), sb = Hc + PANEL, stp = Ht - PANEL, szw2 = (w - (sp2.sep ? PANEL : 0)) / sp2.zones.length;
+          sp2.zones.forEach(function (z, k) { var zx = x + k * (szw2 + (sp2.sep ? PANEL : 0)), Lz = zoneLayout(z, sb, stp);
+            Lz.shelves.forEach(function (y) { Ln(zx + 20, Y(y + PANEL / 2), zx + szw2 - 20, Y(y + PANEL / 2), 'stroke: var(--ink); stroke-width: 10'); });
+            Lz.cases.forEach(function (cs, q) { if (!Lz.tir[q]) return; R(zx + 30, Y(cs[1] - 6), szw2 - 60, cs[1] - cs[0] - 12, 'fill: ' + fill + '; stroke: var(--ink); stroke-width: 6'); Ln(zx + szw2 / 2 - 80, Y(cs[1] - 60), zx + szw2 / 2 + 80, Y(cs[1] - 60), 'stroke: var(--ink); stroke-width: 12; stroke-linecap: round'); }); });
+          if (sp2.sep) R(x + w / 2 - PANEL / 2, Y(stp), PANEL, stp - sb, 'fill: ' + fill + '; stroke: var(--ink); stroke-width: 4'); }
+        var bot = FEET + PANEL, top = Hc - PANEL, zones = pr.zones, zw = (w - (pr.sep ? PANEL : 0)) / zones.length;
+        var ledAt = null;
+        zones.forEach(function (z, k) {
+          var zx = x + k * (zw + (pr.sep ? PANEL : 0)), Lz = zoneLayout(z, bot, top);
+          Lz.hregs.forEach(function (hr) { if (!ledAt || hr[1] > ledAt.y) ledAt = { y: hr[1], x0: zx, x1: zx + zw }; });
+          Lz.shelves.forEach(function (y) { Ln(zx + 20, Y(y + PANEL / 2), zx + zw - 20, Y(y + PANEL / 2), 'stroke: var(--ink); stroke-width: 10'); });
+          Lz.hangs.forEach(function (hg, q) { hang(zx, zw, Y(hg[0]), Math.max(120, hg[1]), i * 3 + k + q); });
+          Lz.cases.forEach(function (cs, q) { if (!Lz.tir[q]) return; R(zx + 30, Y(cs[1] - 6), zw - 60, cs[1] - cs[0] - 12, 'fill: ' + fill + '; stroke: var(--ink); stroke-width: 6'); Ln(zx + zw / 2 - 80, Y(cs[1] - 60), zx + zw / 2 + 80, Y(cs[1] - 60), 'stroke: var(--ink); stroke-width: 12; stroke-linecap: round'); });
+        });
+        if (pr.sep) R(x + w / 2 - PANEL / 2, Y(top), PANEL, top - bot, 'fill: ' + fill + '; stroke: var(--ink); stroke-width: 4');
+        if (c.led === 'h') Ln(ledAt ? ledAt.x0 + 50 : x + 60, Y((ledAt ? ledAt.y : top) - 30), ledAt ? ledAt.x1 - 50 : x + w - 60, Y((ledAt ? ledAt.y : top) - 30), 'stroke: var(--signal); stroke-width: 16; stroke-linecap: round');
+        if (c.led === 'v') { Ln(x + 50, Y(top - 40), x + 50, Y(bot + 40), 'stroke: var(--signal); stroke-width: 14; stroke-linecap: round'); Ln(x + w - 50, Y(top - 40), x + w - 50, Y(bot + 40), 'stroke: var(--signal); stroke-width: 14; stroke-linecap: round'); }
+        if (c.leaves > 0) {
+          var dm = split ? c.doorMode : 'full', nl = c.leaves, GAP = 4, parts2 = [];
+          if (dm === 'full') parts2.push([FEET, Ht, 'b']);
+          if (dm === 'split' || dm === 'bas') parts2.push([FEET, Hc, 'b']);
+          if (dm === 'split' || dm === 'haut') parts2.push([Hc, Ht, 'h']);
+          var DSH = 'stroke: var(--ink-muted); stroke-width: 5; stroke-dasharray: 24 18; opacity: .55';
+          if (view !== 'fac') parts2.forEach(function (pp) { var b1 = pp[0] === FEET ? FEET + 30 : pp[0] + 30, t1 = pp[1] - 30;
+            if (nl === 2) Ln(x + w / 2, Y(t1), x + w / 2, Y(b1), DSH);
+            else Ln(x + w - 40, Y(t1), x + w - 40, Y(b1), DSH); });
+          if (view === 'fac') parts2.forEach(function (pp) { var lw = (w - GAP * (nl + 1)) / nl, b0 = pp[0] + GAP, t0 = pp[1] - GAP;
+            for (var q = 0; q < nl; q++) { var lx = x + GAP + q * (lw + GAP);
+              var hx0 = nl === 2 ? (q === 0 ? lx + lw - 60 : lx + 60) : lx + lw - 60, hx = hx0, hy = pp[2] === 'h' ? b0 + 80 : Math.min(t0 - 80, 1100), hl = Math.min(300, (t0 - b0) * 0.5);
+              fr.push({ x: Math.round(lx), y: Math.round(Y(t0)), w: Math.round(lw), h: Math.round(t0 - b0), hx: Math.round(hx), hy1: Math.round(Y(hy + hl)), hy2: Math.round(Y(hy)) });
+            } });
+        }
+        if (i === sel) selBox = split && partSel === 'haut' ? [x - 24, Y(Ht + 24), w + 48, Hs + 48] : split ? [x - 24, Y(Hc + 24), w + 48, Hc + 48] : [x - 24, Y(Ht + 24), w + 48, Ht + 48];
+        T(x + w / 2, Y(0) + 110, 'C' + (i + 1), 'middle', 'fill: ' + (i === sel ? 'var(--signal)' : 'var(--ink)') + '; font-family: var(--font-mono); font-size: 72px; font-weight: 600');
+        x += w;
+      });
+      var selR = selBox ? [{ x: Math.round(selBox[0]), y: Math.round(selBox[1]), w: Math.round(selBox[2]), h: Math.round(selBox[3]) }] : [];
+      var DST = 'stroke: var(--ink); stroke-width: 6', OST = 'stroke: var(--signal); stroke-width: 6';
+      var tick = function (x1, y1, stl) { Ln(x1 - 28, y1 + 28, x1 + 28, y1 - 28, stl || DST); };
+      var dimV = function (dx, h0, h1, lab, orange, left) { var stl = orange ? OST : DST; Ln(dx, Y(h0), dx, Y(h1), stl); tick(dx, Y(h0), stl); tick(dx, Y(h1), stl);
+        if (h1 - h0 >= 70) T(left ? dx - 24 : dx + 24, Y((h0 + h1) / 2) + 20, lab, left ? 'end' : 'start', 'fill: ' + (orange ? 'var(--signal)' : 'var(--ink)') + '; font-family: var(--font-mono); font-size: 58px; font-weight: ' + (orange ? 700 : 500)); };
+      var dimH = function (dy, x0, x1, lab) { Ln(x0, dy, x1, dy, DST); tick(x0, dy); tick(x1, dy); T((x0 + x1) / 2, dy - 22, lab, 'middle', 'fill: var(--ink); font-family: var(--font-mono); font-size: 58px; font-weight: 500'); };
+      /* cotes de l'aménagement du caisson sélectionné (orange), côté le plus proche */
+      var xs = 0; for (var q2 = 0; q2 < sel; q2++) xs += widths[q2];
+      var onLeft = xs + widths[sel] / 2 < wall / 2, hautSel = split && partSel === 'haut';
+      var eP = hautSel ? effSur(sel) : effInt(sel), pb0 = hautSel ? Hc + PANEL : FEET + PANEL, pt0 = hautSel ? Ht - PANEL : Hc - PANEL;
+      var zl = eP.zones.map(function (z) { var Lz = zoneLayout(z, pb0, pt0), seg = Lz.cases.slice();
+        Lz.hregs.forEach(function (hr) { if (z.pend === 2) { var mid = hr[0] + (hr[1] - hr[0]) / 2; seg.push([hr[0], mid]); seg.push([mid + PANEL, hr[1]]); } else seg.push(hr); });
+        return seg; });
+      if (eP.auto) zl = [zl[0]];
+      var order = onLeft ? zl : zl.slice().reverse(), COL = 200;
+      order.forEach(function (seg, k) { var cx = onLeft ? -110 - k * COL : wall + 110 + k * COL;
+        /* cotes au nu extérieur, coupées au milieu des tablettes : leur somme = cote noire */
+        var sg2 = seg.filter(function (a) { return a[1] - a[0] > 20; }).sort(function (a, b) { return a[0] - b[0]; }), bd = [pb0 - PANEL];
+        for (var u = 1; u < sg2.length; u++) bd.push((sg2[u - 1][1] + sg2[u][0]) / 2);
+        bd.push(pt0 + PANEL); bd = bd.map(Math.round);
+        var raw = []; for (var v = 0; v + 1 < bd.length; v++) raw.push(bd[v + 1] - bd[v]);
+        var labs = raw.slice(), g0 = 0;
+        for (var v2 = 1; v2 <= raw.length; v2++) { var grp = raw.slice(g0, v2 + 1); if (v2 === raw.length || Math.max.apply(null, grp) - Math.min.apply(null, grp) > 1) { var cur = raw.slice(g0, v2), mean = Math.round(cur.reduce(function (x1, x2) { return x1 + x2; }, 0) / cur.length); for (var g = g0; g < v2; g++) labs[g] = mean; g0 = v2; } }
+        for (var v3 = 0; v3 + 1 < bd.length; v3++) dimV(cx, bd[v3], bd[v3 + 1], String(labs[v3]), true, onLeft); });
+      /* cotes générales (noir), à droite, après les cotes orange éventuelles */
+      var dx = wall + 110 + (onLeft ? 0 : order.length * COL);
+      dimV(dx, 0, FEET, String(FEET)); dimV(dx, FEET, Hc, String(Hc - FEET)); if (split) dimV(dx, Hc, Ht, String(Hs));
+      dimV(dx + COL, 0, Ht, String(Ht)); if (full) dimV(dx + 2 * COL, 0, ceiling, String(ceiling));
+      var xa = 0; widths.forEach(function (w2) { dimH(Y(0) + 250, xa, xa + w2, String(w2)); xa += w2; });
+      dimH(Y(0) + 400, 0, wall, String(wall));
+    }
+
+    /* ---------- vues ---------- */
+    var STEPS = ['Espace', 'Caissons', 'Aménagement', 'Récapitulatif'];
+    var segBtn = function (on) { return { bg: on ? 'var(--ink)' : 'transparent', fg: on ? 'var(--surface-raised)' : 'var(--ink)', on: on ? 'true' : 'false' }; };
+    var num = function (key, lo, hi) { return function (e) { var v = Math.round(Number(e && e.target ? e.target.value : e)); if (!isNaN(v)) { var o = {}; o[key] = Math.min(hi, Math.max(lo, v)); set(o); } }; };
+    var logo = (this.props.logo || '').trim();
+    var c0 = cabs[sel];
+    var isHautP = split && partSel === 'haut', pKey = isHautP ? 'surInt' : 'int', pInt = c0[pKey];
+    var pBot = isHautP ? Hc + PANEL : FEET + PANEL, pTop = isHautP ? Ht - PANEL : Hc - PANEL;
+    var setP = function (fn) { var it = clone(pInt); fn(it); var o = {}; o[pKey] = it; if (!isHautP) o.preset = 'custom'; setCab(sel, o); };
+    var effP = isHautP ? effSur(sel) : effInt(sel);
+    var zoneUI = function (k, title) {
+      var z = pInt.sep ? pInt.zones[k] : (effP.auto ? pInt.zones[0] : pInt.zones[0]), Lz = zoneLayout(z, pBot, pTop);
+      var zwv = Math.round((widths[sel] - 2 * PANEL - (effP.sep ? PANEL : 0)) / (effP.sep ? 2 : 1));
+      var upd = function (fn) { setP(function (it) { fn(it.zones[pInt.sep ? k : 0]); }); };
+      var segs = [];
+      Lz.cases.forEach(function (cs, q) { var hgt = Math.round(cs[1] - cs[0]), ok = hgt <= MAXD, on = !!Lz.tir[q]; segs.push({ y: cs[0], h: hgt, label: on ? 'Tiroir' : (ok ? 'Ouvert' : 'Ouvert · trop haute pour un tiroir'), mm: hgt + ' mm', bg: on ? fill : 'var(--surface)', fg: on && dark ? '#fff' : 'var(--ink)', bd: ok ? '1.5px dashed var(--ink)' : '1px solid var(--line)', cur: ok ? 'pointer' : 'default', flex: Math.max(28, hgt / 8), toggle: ok ? function () { upd(function (zz) { var t = (zz.tir || []).slice(); t[q] = !t[q]; zz.tir = t; }); } : function () {} }); });
+      (Lz.hregs || []).forEach(function (hr) { segs.push({ y: hr[0], h: hr[1] - hr[0], label: 'Penderie', mm: '', bg: 'repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 10px)', fg: 'var(--ink-muted)', bd: '1px solid var(--line)', cur: 'default', flex: Math.max(40, (hr[1] - hr[0]) / 8), toggle: function () {} }); });
+      segs.sort(function (a2, b3) { return b3.y - a2.y; });
+      var okIdx = []; Lz.cases.forEach(function (cs, q) { if (cs[1] - cs[0] <= MAXD) okIdx.push(q); });
+      return { title: title, width: zwv + ' mm', pend: z.pend, tab: z.tab, canPend: !isHautP,
+        lessPend: function () { upd(function (zz) { zz.pend = Math.max(0, zz.pend - 1); }); }, morePend: function () { upd(function (zz) { zz.pend = Math.min(2, zz.pend + 1); }); },
+        lessTab: function () { upd(function (zz) { zz.tab = Math.max(0, zz.tab - 1); }); }, moreTab: function () { upd(function (zz) { zz.tab = Math.min(10, zz.tab + 1); }); },
+        showOrdre: z.pend > 0 && z.tab > 0,
+        ordreOpts: [['haut', 'Penderie en haut'], ['bas', 'Penderie en bas']].map(function (o) { var b2 = segBtn((z.ordre || 'bas') === o[0]); return { label: o[1], on: b2.on, bg: b2.bg, fg: b2.fg, pick: function () { upd(function (zz) { zz.ordre = o[0]; }); } }; }),
+        hasCases: okIdx.length > 0, segs: segs,
+        allTir: function () { upd(function (zz) { var t = []; okIdx.forEach(function (q) { t[q] = true; }); zz.tir = t; }); },
+        noTir: function () { upd(function (zz) { zz.tir = []; }); } };
+    };
+    /* ---------- demande de BAT ---------- */
+    var self2 = this;
+    var fld = function (k) { return function (e) { var v = e && e.target ? e.target.value : e, o = {}; o[k] = v; self2._f = Object.assign({}, st.f || {}, self2._f || {}, o); }; };
+    var confText = function () {
+      var out = ['Projet : ' + wall + ' × ' + Ht + ' × ' + P + ' mm (L × H × P)' + (full ? ', pleine hauteur sous un plafond de ' + ceiling + ' mm' : ''), 'Plinthe : ' + FEET + ' mm', 'Décor : ' + dsel[0] + ' · ' + dsel[1], 'Caissons : ' + n + (split ? ', en 2 parties (caisson ' + Hc + ' + sur-caisson ' + Hs + ')' : ''), ''];
+      per.forEach(function (L, i) { out.push('C' + (i + 1) + ' · ' + widths[i] + ' mm'); fmtL(L).forEach(function (l) { out.push('  ' + l.ref + '  ' + l.label + '  ' + l.price); }); out.push('  Sous-total ' + eur(subOf(L))); out.push(''); });
+      fmtL(glob).forEach(function (l) { out.push(l.ref + '  ' + l.label + '  ' + l.price); });
+      out.push('', 'Total : ' + eur(ht) + ' HT · ' + eur(ht * 1.2) + ' TTC' + (hasQuote ? ' (hors usinages à chiffrer)' : ''));
+      return out.join('\n'); };
+    var sendBat = function () {
+      var f = Object.assign({}, st.f || {}, self2._f || {}), req = [['prenom', 'le prénom'], ['nom', 'le nom'], ['societe', 'la société'], ['email', 'l’e-mail'], ['telephone', 'le téléphone']];
+      var miss = req.filter(function (r) { return !String(f[r[0]] || '').trim(); }).map(function (r) { return r[1]; });
+      if (errors.length) { set({ f: f, formErr: 'Corrigez d’abord la configuration : ' + errors[0] }); return; }
+      if (miss.length) { set({ f: f, formErr: 'Merci de renseigner ' + miss.join(', ') + '.' }); return; }
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(f.email).trim())) { set({ f: f, formErr: 'L’adresse e-mail ne semble pas valide.' }); return; }
+      var data = { 'form-name': 'bat', 'bot-field': '', prenom: f.prenom || '', nom: f.nom || '', societe: f.societe || '', email: f.email || '', telephone: f.telephone || '', message: f.message || '',
+        total_ht: eur(ht), total_ttc: eur(ht * 1.2), configuration: confText(),
+        config_json: JSON.stringify({ wall: wall, height: ceiling, full: full, depth: P, feet: FEET, decor: dsel[0], widths: widths, cabs: cabs }) };
+      if (!window.BAAM_LIVE) { set({ f: f, formErr: '', sent: 'preview' }); return; }
+      set({ f: f, formErr: '', sent: 'sending' });
+      var shrink = function (file) { return new Promise(function (ok) {
+        var img = new Image(), url = URL.createObjectURL(file);
+        img.onload = function () { var k = Math.min(1, 1600 / Math.max(img.width, img.height)), cv = document.createElement('canvas'); cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
+          cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height); URL.revokeObjectURL(url);
+          cv.toBlob(function (b) { ok(b ? new File([b], file.name.replace(/\.[^.]+$/, '') + '.jpg', { type: 'image/jpeg' }) : file); }, 'image/jpeg', 0.8); };
+        img.onerror = function () { URL.revokeObjectURL(url); ok(file); };
+        img.src = url; }); };
+      Promise.all((self2._files || []).map(shrink)).then(function (files) {
+        var fd = new FormData(); Object.keys(data).forEach(function (k) { fd.append(k, data[k]); });
+        files.forEach(function (f2, i) { fd.append('photo' + (i + 1), f2); });
+        return fetch('/', { method: 'POST', body: fd });
+      }).then(function (r) { set(r.ok ? { sent: 'ok' } : { sent: 'err', formErr: 'L’envoi n’a pas abouti (photos trop lourdes ?). Réessayez avec moins de photos ou écrivez-nous.' }); })
+        .catch(function () { set({ sent: 'err', formErr: 'L’envoi n’a pas abouti. Vérifiez votre connexion et réessayez.' }); });
+    };
+    return {
+      logo: logo, hasLogo: !!logo, noLogo: !logo, logoHeight: this.props.logoHeight || 32,
+      steps: STEPS.map(function (l, k) { return { n: '0' + (k + 1), label: l, cur: k === step ? 'step' : 'false', bar: k === step ? 'var(--signal)' : 'transparent', fg: k === step ? 'var(--ink)' : 'var(--ink-muted)', go: function () { set({ step: k }); } }; }),
+      isStep0: step === 0, isStep1: step === 1, isStep2: step === 2, isStep4: step === 3,
+      wall: wall, ceiling: ceiling, depth: depth, isFull: full, fullMark: full ? '✓' : '', fullOn: full ? 'true' : 'false', toggleFull: function () { set({ full: !full }); },
+      fullNote: full ? 'Le meuble monte jusqu’au plafond, avec 10 mm de jeu : il fait ' + mm(H) + ' de haut.' : 'Le meuble fait la hauteur du projet, en un seul caisson (2500 mm maximum).',
+      setWall: num('wall', 300, 12000), setCeiling: num('ceiling', 1000, 4000), setDepth: num('depth', 400, 650), feet: FEET, setFeet: num('feet', 50, 200),
+      showSplit: split, splitText: 'Votre meuble fait ' + mm(Ht) + ' : il est fabriqué en un caisson de ' + mm(Hc) + ' et une partie haute de ' + mm(Hs) + ', pour passer les portes et se redresser dans la pièce. Une fois posés, ils forment un seul meuble.',
+      decors: (QUICK.indexOf(dsel[0]) >= 0 ? QUICK : [dsel[0]].concat(QUICK.slice(0, QUICK.length - 1))).map(function (c) { return swOf(DMAP[c], 36); }),
+      nDecors: DECORS.length,
+      modalOpen: !!st.modal, openModal: function () { set({ modal: true, mfam: dsel[2] }); }, closeModal: function () { set({ modal: false }); },
+      famBtns: [['bois', 'Bois'], ['unis', 'Unis'], ['matieres', 'Matières'], ['blancs', 'Blancs']].map(function (f) { var on = f[0] === famCur; return { label: f[1], n: DECORS.filter(function (d) { return d[2] === f[0]; }).length, bgc: on ? 'var(--ink)' : 'transparent', fg: on ? 'var(--surface-raised)' : 'var(--ink)', on: on ? 'true' : 'false', pick: function () { set({ mfam: f[0] }); } }; }),
+      allDecors: DECORS.filter(function (d) { return d[2] === famCur; }).map(function (d) { return swOf(d, 34); }),
+      photo: '/_blob/eec3c9b534f71f3bca8597181775ceb5',
+      sim: (function () {
+        var K = 0.6, TW = 256 * K, TH = 192 * K, t = TEX[dsel[0]], hx = dsel[3];
+        var lift = function (h) { return 'rgb(' + [1, 3, 5].map(function (i) { return Math.round(23 + 0.91 * parseInt(h.substr(i, 2), 16)); }).join(',') + ')'; };
+        var o = { show: dsel[0] === 'H3170' ? 0 : 1, pw: TW, ph: TH, ix: 0, iy: 0, iw: 11 * TW, ih: 11 * TH, rot: '', fill: lift(hx) };
+        if (t) { o.ix = -(t[0] % 11) * TW; o.iy = -Math.floor(t[0] / 11) * TH; o.rot = t[1] ? 'rotate(90)' : ''; o.fill = 'url(#cf-tex)'; }
+        return o;
+      })(),
+      doors: fr, fillCol: fill, selR: selR,
+      decorLabel: dsel[0] + ' · ' + dsel[1],
+      viewOpts: [['int', 'Intérieur'], ['fac', 'Façade']].map(function (o) { var b = segBtn((st.view === 'fac' ? 'fac' : 'int') === o[0]); return { label: o[1], on: b.on, bg: b.bg, fg: b.fg, pick: function () { set({ view: o[0] }); } }; }),
+      decorType: dsel[5] + ' · ' + ({ bois: 'Bois', unis: 'Uni', matieres: 'Matière', blancs: 'Blanc' })[dsel[2]],
+      showInfo: !!st.info && split, infoExp: st.info ? 'true' : 'false', toggleInfo: function () { set({ info: !st.info }); },
+      infoText: 'Pourquoi un sur-caisson ? ' + (reason === 'cheaper' ? 'À cette hauteur, un caisson de ' + mm(Hc) + ' surmonté d’un sur-caisson de ' + mm(Hs) + ' revient moins cher qu’un caisson d’un seul tenant, pour le même meuble.' : reason === 'tall' ? 'Au-delà de 2500 mm, un caisson ne se fabrique pas d’un seul tenant : nous le faisons en un caisson de ' + mm(Hc) + ' et un sur-caisson de ' + mm(Hs) + ', posé dessus.' : 'Monté d’un seul tenant, un meuble de ' + mm(Ht) + ' ne pourrait pas être redressé dans la pièce : sa diagonale dépasserait la hauteur sous plafond. Nous le fabriquons donc en un caisson de ' + mm(Hc) + ' et un sur-caisson de ' + mm(Hs) + ', posé dessus.') + ' Une fois en place, ils forment un seul meuble.',
+      n: n, wLabel: Object.keys(fixedW).length ? 'largeurs sur mesure' : (rem ? 'caissons de ' + base + ' à ' + (base + 1) + ' mm' : 'caissons de ' + base + ' mm'),
+      lessCab: function () { set({ n: Math.max(minN, n - 1), w: {} }); }, moreCab: function () { set({ n: Math.min(maxN, n + 1), w: {} }); },
+      cabRows: widths.map(function (w, i) { var fx = fixedW[i] != null; return { id: 'C' + (i + 1), w: w, setW: setW(i), free: freeW(i), fixed: fx, auto: !fx, dim: '× ' + Ht + ' × ' + P + (split ? ' en 2 parties (caisson + sur-caisson)' : ''), split: split, price: errors.length ? '—' : eur(subOf(per[i])) }; }),
+      cabTabs: widths.map(function (w, i) { var b = segBtn(i === sel); return { id: 'C' + (i + 1) + ' · ' + w, on: b.on, bg: b.bg, fg: b.fg, pick: function () { set({ sel: i }); } }; }),
+      selLines: errors.length ? [] : fmtL(per[sel]),
+      cabTitle: 'Caisson C' + (sel + 1) + ' · ' + widths[sel] + ' × ' + Ht + ' mm',
+      cabSub: (split ? 'Caisson ' + mm(Hc) + ' + sur-caisson ' + mm(Hs) + '. ' : '') + 'Cliquez un caisson sur le plan pour passer de l’un à l’autre.',
+      leafOpts: [[0, 'Sans porte'], [1, '1 porte'], [2, '2 portes']].map(function (o) { var dis = o[0] === 1 && widths[sel] > 600, b = segBtn(c0.leaves === o[0]); return { label: o[1], on: b.on, bg: b.bg, fg: dis ? 'var(--ink-muted)' : b.fg, op: dis ? 0.45 : 1, pick: function () { if (!dis) setCab(sel, { leaves0: o[0] }); } }; }),
+      showMode: split && c0.leaves > 0,
+      modeOpts: [['full', 'Portes pleine hauteur'], ['sep', 'Portes séparées']].map(function (o) { var isSep = c0.doorMode !== 'full', dis = o[0] === 'full' && Ht > 2700, b = segBtn(o[0] === 'sep' ? isSep : !isSep); return { label: o[1], on: b.on, bg: b.bg, fg: dis ? 'var(--ink-muted)' : b.fg, op: dis ? 0.45 : 1, pick: function () { if (dis) return; if (o[0] === 'full') setCab(sel, { doorMode: 'full' }); else if (c0.doorMode === 'full') setCab(sel, { doorMode: 'split' }); } }; }),
+      showWhere: split && c0.leaves > 0 && c0.doorMode !== 'full',
+      whereOpts: [['bas', 'Porte sur le caisson'], ['haut', 'Porte sur le sur-caisson']].map(function (o) { var m = c0.doorMode, onB = m === 'split' || m === 'bas', onH = m === 'split' || m === 'haut', on = o[0] === 'bas' ? onB : onH; return { label: o[1], on: on ? 'true' : 'false', mark: on ? '✓' : '', pick: function () { var b2 = onB, h2 = onH; if (o[0] === 'bas') b2 = !b2; else h2 = !h2; if (!b2 && !h2) return; setCab(sel, { doorMode: b2 && h2 ? 'split' : (b2 ? 'bas' : 'haut') }); } }; }),
+      doorNote: widths[sel] > 600 ? 'Une porte fait 600 mm maxi : ce caisson en reçoit deux.' : '',
+      hasSur: split,
+      partOpts: [['bas', 'Caisson · ' + Hc + ' mm'], ['haut', 'Sur-caisson · ' + Hs + ' mm']].map(function (o) { var b = segBtn(partSel === o[0]); return { label: o[1], on: b.on, bg: b.bg, fg: b.fg, pick: function () { set({ part: o[0] }); } }; }),
+      isBas: !isHautP,
+      models: ['penderie', 'double', 'tablettes', 'mixte'].map(function (k) { var on = c0.preset === k; return { key: k, label: { penderie: 'Penderie', double: 'Double penderie', tablettes: 'Tablettes', mixte: 'Tablettes + penderie' }[k], on: on ? 'true' : 'false', bd: on ? '2px solid var(--signal)' : '1px solid var(--line)', pick: function () { setCab(sel, { preset: k, int: clone({ sep: PRESETS[k].sep, zones: PRESETS[k].zones }) }); },
+        isP: k === 'penderie', isD: k === 'double', isT: k === 'tablettes', isM: k === 'mixte' }; }),
+      interiorTitle: isHautP ? 'Intérieur du sur-caisson' : 'Intérieur du caisson',
+      sepOn: pInt.sep ? 'true' : 'false', sepMark: pInt.sep ? '✓' : '',
+      toggleSep: function () { setP(function (it) { if (it.sep) { it.sep = false; it.zones = [it.zones[0]]; } else { it.sep = true; it.zones = [it.zones[0], clone(it.zones[0])]; } }); },
+      sepPrice: '+' + PX.sep + ' € HT',
+      autoSepNote: effP.auto,
+      zonesUI: pInt.sep ? [zoneUI(0, 'Zone gauche'), zoneUI(1, 'Zone droite')] : [zoneUI(0, 'Intérieur')],
+      ledOpts: [['none', 'Aucun'], ['h', 'Bandeau en haut'], ['v', 'Montants latéraux']].map(function (o) { var b = segBtn(c0.led === o[0]); return { label: o[1], on: b.on, bg: b.bg, fg: b.fg, pick: function () { setCab(sel, { led: o[0] }); } }; }),
+      plintheOpts: [[true, 'Avec plinthe'], [false, 'Sans plinthe']].map(function (o) { var b = segBtn(plinthe === o[0]); return { label: o[1], on: b.on, bg: b.bg, fg: b.fg, pick: function () { set({ plinthe: o[0] }); } }; }),
+      plexOpts: [[false, 'Aucune'], [true, 'Fraiser l’arrière des caissons']].map(function (o) { var b = segBtn(plex === o[0]); return { label: o[1], on: b.on, bg: b.bg, fg: b.fg, pick: function () { set({ plex: o[0] }); } }; }),
+      prises: prises, lessPrise: function () { set({ prises: Math.max(0, prises - 1) }); }, morePrise: function () { set({ prises: Math.min(20, prises + 1) }); },
+      recap: per.map(function (L, i) { return { id: 'C' + (i + 1), desc: (cabs[i].preset === 'custom' ? 'Sur mesure' : PRESETS[cabs[i].preset].label) + (cabs[i].led !== 'none' ? ', LED' : ''), lines: fmtL(L), sub: eur(subOf(L)) }; }),
+      globalRows: fmtL(glob), hasQuote: hasQuote,
+      hasErrors: errors.length > 0, errorText: errors.join(' '),
+      summary: 'L ' + wall + ' × H ' + Ht + ' × P ' + P + ' mm · ' + n + ' caisson' + (n > 1 ? 's' : ''),
+      vb: '-470 -120 ' + (wall + 1500) + ' ' + (ceiling + 580), ceil: { x1: -60, x2: wall + 60 }, floorY: ceiling,
+      svgLabel: 'Élévation du meuble : ' + n + ' caissons, ' + wall + ' mm de large, ' + Ht + ' mm de haut',
+      rects: rects, lines: lines,
+      labels: (function () { var vx = -470, vy = -120, vw = wall + 1500, vh = ceiling + 580; return texts.map(function (t) {
+        var m = /fill:\s*([^;]+)/.exec(t.st), fz = /font-size:\s*(\d+)/.exec(t.st), fw = /font-weight:\s*(\d+)/.exec(t.st), big = fz && +fz[1] >= 70;
+        return { s: t.s, l: ((t.x - vx) / vw * 100).toFixed(3), t: ((t.y - vy) / vh * 100).toFixed(3), tf: 'translate(' + (t.a === 'start' ? '0' : t.a === 'end' ? '-100%' : '-50%') + ', -80%)', fs: big ? 14 : 12, fsv: big ? 'max(8px, min(14px, 1.75cqw))' : 'max(7px, min(12px, 1.5cqw))', fw: fw ? fw[1] : 400, col: m ? m[1].trim() : 'var(--ink)' }; }); })(),
+      ar: (wall + 1500) + ' / ' + (ceiling + 580), maxW: Math.round(640 * (wall + 1500) / (ceiling + 580)),
+      hits: errors.length ? [] : (function () { var x0 = 0, out = []; widths.forEach(function (w, i) {
+        if (split) { out.push({ x: x0, y: Y(Ht + 24), w: w, h: Hs + 24, label: 'C' + (i + 1) + ' · aménager le sur-caisson', pick: function () { set({ sel: i, part: 'haut', step: 2 }); } }); out.push({ x: x0, y: Y(Hc), w: w, h: Hc + 220, label: 'C' + (i + 1) + ' · aménager le caisson', pick: function () { set({ sel: i, part: 'bas', step: 2 }); } }); }
+        else out.push({ x: x0, y: Y(Ht + 24), w: w, h: Ht + 24 + 220, label: 'C' + (i + 1) + ' · aménager ce caisson', pick: function () { set({ sel: i, part: 'bas', step: 2 }); } });
+        x0 += w; }); return out; })(),
+      totalHt: errors.length ? '—' : eur(ht) + (hasQuote ? ' +' : ''), totalTtc: errors.length ? '—' : eur(ht * 1.2),
+      canBack: step > 0, back: function () { set({ step: Math.max(0, step - 1) }); },
+      nextLabel: step < 3 ? STEPS[step + 1] + ' →' : 'Demander mon BAT',
+      next: function () { if (step < 3) set({ step: step + 1 }); else sendBat(); },
+      formOpen: st.sent !== 'ok' && st.sent !== 'preview', formDone: st.sent === 'ok' || st.sent === 'preview', formErr: st.formErr || '',
+      doneText: st.sent === 'preview' ? 'Aperçu : sur le site en ligne, la demande vous parvient par e-mail.' : 'Merci ' + ((st.f || {}).prenom || '') + ', nous revenons vers vous sous 24 h ouvrées avec votre BAT.',
+      sendLabel: st.sent === 'sending' ? 'Envoi…' : 'Envoyer ma demande de BAT',
+      submitBat: function (e) { if (e && e.preventDefault) e.preventDefault(); sendBat(); },
+      f_prenom: fld('prenom'), f_nom: fld('nom'), f_societe: fld('societe'), f_email: fld('email'), f_telephone: fld('telephone'), f_message: fld('message'),
+      f_photos: function (e) { var fl = Array.prototype.slice.call((e && e.target && e.target.files) || []).filter(function (x) { return /^image\//.test(x.type); }); self2._files = fl.slice(0, 3); set({ nPhotos: self2._files.length, photoMore: fl.length > 3 }); },
+      photoNote: (st.nPhotos ? st.nPhotos + ' photo' + (st.nPhotos > 1 ? 's' : '') + ' jointe' + (st.nPhotos > 1 ? 's' : '') + (st.photoMore ? ' (les 3 premières)' : '') + '. ' : '') + 'Elles sont réduites automatiquement avant l’envoi.'
+    };
+  }
+}
+</script>
+</body>
+</html>
