@@ -47,7 +47,7 @@ a{color:var(--ink)}a:hover{color:var(--signal)}
 .hdr{container-type:inline-size}
 .hero-ctas-c{container-type:inline-size}
 .hero-ctas{display:flex;flex-wrap:nowrap;gap:16px;align-items:stretch}
-@container (max-width:520px){.hero-ctas{gap:8px}.hero-ctas>*{flex:1 1 0;min-width:0}.hero-ctas .bm-btn{width:100%;white-space:nowrap;padding-left:10px;padding-right:10px;font-size:13px;overflow:hidden;text-overflow:ellipsis}}
+@container (max-width:520px){.hero-ctas{gap:8px}.hero-ctas>*{flex:1 1 0;min-width:0}.hero-ctas .bm-btn{width:100%;box-sizing:border-box;white-space:nowrap;padding-left:10px;padding-right:10px;font-size:13px;overflow:hidden;text-overflow:ellipsis}}
 .burger{display:none;margin-left:auto;width:44px;height:44px;padding:0;border:1px solid var(--line-strong);background:var(--surface-raised);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px}
 .burger span{display:block;width:20px;height:2px;background:var(--ink);transition:transform .2s ease,opacity .2s ease}
 .burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}.burger.open span:nth-child(2){opacity:0}.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
@@ -97,7 +97,7 @@ a{color:var(--ink)}a:hover{color:var(--signal)}
 <div class="hero-ctas-c">
 <div class="hero-ctas">
 <a class="bm-btn bm-btn-primary" href="Configurateur.dc.html" style="text-decoration: none; display: flex; justify-content: center">Configurer un caisson</a>
-<x-import component-from-global-scope="BAAM.Button" variant="secondary">Grille tarifaire PDF</x-import>
+<a class="bm-btn bm-btn-secondary" href="GrilleTarifaire.dc.html" style="text-decoration: none; display: flex; justify-content: center">Grille tarifaire PDF</a>
 </div>
 </div>
 <div style="margin-top: 16px">
