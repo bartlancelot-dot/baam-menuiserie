@@ -25,7 +25,7 @@ const BLOBS = {
   '0e28e6284229e44e3dba29e73212ca2c': 'dressing-shade.jpg',
 };
 
-const BAT_FIELDS = ['prenom', 'nom', 'societe', 'email', 'telephone', 'message', 'total_ht', 'total_ttc', 'configuration', 'config_json', 'photo1', 'photo2', 'photo3'];
+const BAT_FIELDS = ['prenom', 'nom', 'societe', 'email', 'telephone', 'message', 'total_ht', 'total_ttc', 'configuration', 'config_json', 'schema', 'photo1', 'photo2', 'photo3'];
 
 function rewrite(s) {
   s = s.replace(/\/_blob\/([0-9a-f]{32})/g, (m, id) => {
@@ -93,7 +93,7 @@ for (const p of PAGES) {
   const isCfg = p.file === 'Configurateur.dc.html';
   const netlifyForm = isCfg
     ? `<form name="bat" method="POST" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field" hidden>${['bot-field', ...BAT_FIELDS]
-        .map((f) => (f === 'message' || f === 'configuration' || f === 'config_json' ? `<textarea name="${f}"></textarea>` : `<input name="${f}"${/^photo/.test(f) ? ' type="file"' : ''}>`))
+        .map((f) => (f === 'message' || f === 'configuration' || f === 'config_json' ? `<textarea name="${f}"></textarea>` : `<input name="${f}"${/^(photo|schema)/.test(f) ? ' type="file"' : ''}>`))
         .join('')}</form>\n`
     : '';
 

@@ -683,8 +683,39 @@ class Component extends DCLogic {
           cv.toBlob(function (b) { ok(b ? new File([b], file.name.replace(/\.[^.]+$/, '') + '.jpg', { type: 'image/jpeg' }) : file); }, 'image/jpeg', 0.8); };
         img.onerror = function () { URL.revokeObjectURL(url); ok(file); };
         img.src = url; }); };
-      Promise.all((self2._files || []).map(shrink)).then(function (files) {
+      var schema = function () { return new Promise(function (ok) {
+        try {
+          var saved = self2.state, vi, vf;
+          self2.state = Object.assign({}, saved, { view: 'int' }); vi = self2.renderVals();
+          self2.state = Object.assign({}, saved, { view: 'fac' }); vf = self2.renderVals();
+          self2.state = saved;
+          var vb = vi.vb.split(' ').map(Number), VW = vb[2], VH = vb[3], GAP = 200, HEAD = 260, PADX = 120;
+          var e = function (x) { return String(x).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); };
+          var view = function (v, title, ox) {
+            var o = '<svg x="' + ox + '" y="' + HEAD + '" width="' + VW + '" height="' + VH + '" viewBox="' + v.vb + '" overflow="visible">';
+            if (v.isFullH) o += '<line x1="-60" y1="0" x2="' + (wall + 60) + '" y2="0" style="stroke: #82888d; stroke-width: 6; stroke-dasharray: 30 20"/>';
+            o += '<line x1="-60" y1="' + v.ceilY + '" x2="' + (wall + 60) + '" y2="' + v.ceilY + '" style="stroke: #14171a; stroke-width: 8"/>';
+            v.rects.forEach(function (r) { o += '<rect x="' + r.x + '" y="' + r.y + '" width="' + r.w + '" height="' + r.h + '" rx="' + r.rx + '" style="' + e(r.st) + '"/>'; });
+            v.lines.filter(function (l) { return l.st !== 'stroke: var(--signal); stroke-width: 6'; }).forEach(function (l) { o += '<line x1="' + l.x1 + '" y1="' + l.y1 + '" x2="' + l.x2 + '" y2="' + l.y2 + '" style="' + e(l.st) + '"/>'; });
+            v.doors.forEach(function (d) { o += '<rect x="' + d.x + '" y="' + d.y + '" width="' + d.w + '" height="' + d.h + '" style="fill: ' + v.fillCol + '; stroke: #14171a; stroke-width: 6"/><line x1="' + d.hx + '" y1="' + d.hy1 + '" x2="' + d.hx + '" y2="' + d.hy2 + '" style="stroke: #14171a; stroke-width: 14; stroke-linecap: round"/>'; });
+            v.svgTexts.filter(function (t) { return !(t.st.indexOf('var(--signal)') >= 0 && /^[0-9]+$/.test(t.s)); }).forEach(function (t) { o += '<text x="' + t.x + '" y="' + t.y + '" text-anchor="' + t.a + '" style="' + e(/^C[0-9]+$/.test(t.s) ? t.st.replace('var(--signal)', 'var(--ink)') : t.st) + '">' + e(t.s) + '</text>'; });
+            return '<text x="' + (ox + PADX) + '" y="150" style="font: 700 110px Arial, sans-serif; fill: #14171a">' + title + '</text>' + o + '</svg>';
+          };
+          var TW = PADX + VW * 2 + GAP, TH = HEAD + VH + 260;
+          var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + TW + '" height="' + TH + '" viewBox="0 0 ' + TW + ' ' + TH + '" style="--ink: #14171a; --ink-muted: #82888d; --line: #dcdee0; --signal: #ff3b00; --surface: #f1f1ee; --surface-raised: #ffffff; --font-mono: Menlo, Consolas, monospace">'
+            + '<rect width="100%" height="100%" fill="#ffffff"/>' + view(vi, 'Intérieur', PADX) + view(vf, 'Façade', PADX + VW + GAP)
+            + '<text x="' + PADX + '" y="' + (TH - 90) + '" style="font: 500 64px Arial, sans-serif; fill: #82888d">' + e(vi.summary + ' · ' + vi.decorLabel + ' · ' + vi.totalHt + ' HT') + '</text></svg>';
+          var img = new Image(), k = 2400 / TW;
+          img.onload = function () { var cv = document.createElement('canvas'); cv.width = Math.round(TW * k); cv.height = Math.round(TH * k); var cx = cv.getContext('2d'); cx.drawImage(img, 0, 0, cv.width, cv.height);
+            try { cv.toBlob(function (b) { ok(b ? new File([b], 'schema-baam.png', { type: 'image/png' }) : null); }, 'image/png'); } catch (err) { ok(null); } };
+          img.onerror = function () { ok(null); };
+          img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+        } catch (err) { ok(null); }
+      }); };
+      Promise.all([schema()].concat((self2._files || []).map(shrink))).then(function (all) {
+        var sch = all[0], files = all.slice(1);
         var fd = new FormData(); Object.keys(data).forEach(function (k) { fd.append(k, data[k]); });
+        if (sch) fd.append('schema', sch);
         files.forEach(function (f2, i) { fd.append('photo' + (i + 1), f2); });
         return fetch('/', { method: 'POST', body: fd });
       }).then(function (r) { set(r.ok ? { sent: 'ok' } : { sent: 'err', formErr: 'L’envoi n’a pas abouti (photos trop lourdes ?). Réessayez avec moins de photos ou écrivez-nous.' }); })
@@ -751,7 +782,7 @@ class Component extends DCLogic {
       summary: 'L ' + wall + ' × H ' + Ht + ' × P ' + P + ' mm · ' + n + ' caisson' + (n > 1 ? 's' : ''),
       vb: '-470 -120 ' + (wall + 1500) + ' ' + (ceiling + 580), ceil: { x1: -60, x2: wall + 60 }, floorY: ceiling,
       svgLabel: 'Élévation du meuble : ' + n + ' caissons, ' + wall + ' mm de large, ' + Ht + ' mm de haut',
-      rects: rects, lines: lines,
+      rects: rects, lines: lines, svgTexts: texts, isFullH: full, ceilY: ceiling,
       labels: (function () { var vx = -470, vy = -120, vw = wall + 1500, vh = ceiling + 580; return texts.map(function (t) {
         var m = /fill:\s*([^;]+)/.exec(t.st), fz = /font-size:\s*(\d+)/.exec(t.st), fw = /font-weight:\s*(\d+)/.exec(t.st), big = fz && +fz[1] >= 70;
         return { s: t.s, l: ((t.x - vx) / vw * 100).toFixed(3), t: ((t.y - vy) / vh * 100).toFixed(3), tf: 'translate(' + (t.a === 'start' ? '0' : t.a === 'end' ? '-100%' : '-50%') + ', -80%)', fs: big ? 14 : 12, fsv: big ? 'max(8px, min(14px, 1.75cqw))' : 'max(7px, min(12px, 1.5cqw))', fw: fw ? fw[1] : 400, col: m ? m[1].trim() : 'var(--ink)' }; }); })(),
