@@ -186,10 +186,28 @@ a{color:var(--ink)}a:hover{color:var(--signal)}
 </div>
 </section>
 
+<section id="commander" data-theme="encre" style="background: var(--surface); color: var(--ink)">
+<div class="wrap" style="display: flex; flex-direction: column; gap: 48px; padding-top: clamp(56px,7vw,112px); padding-bottom: clamp(56px,7vw,112px)">
+<div style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
+<x-import component-from-global-scope="BAAM.Eyebrow" number="02">Commander</x-import>
+<x-import component-from-global-scope="BAAM.Heading" level="{{two}}">Du plan au chantier, en quatre étapes.</x-import>
+</div>
+<ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="4">
+<li style="display: flex; flex-direction: column; gap: 10px; border-top: 2px solid var(--line-strong); padding-top: 18px">
+<span style="font-family: var(--font-mono); font-size: 13px; color: var(--ink-muted)">{{s.n}}</span>
+<span style="font-size: 18px; line-height: 24px; font-weight: 700">{{s.title}}</span>
+<span style="font-size: 14px; line-height: 22px; color: var(--ink-muted)">{{s.text}}</span>
+</li>
+</sc-for>
+</ol>
+</div>
+</section>
+
 <section id="prix" style="background: var(--surface)">
 <div class="wrap" style="display: flex; flex-wrap: wrap; gap: 56px; padding-top: clamp(56px,7vw,112px); padding-bottom: clamp(56px,7vw,112px)">
 <div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
-<x-import component-from-global-scope="BAAM.Eyebrow" number="02">Des tarifs transparents</x-import>
+<x-import component-from-global-scope="BAAM.Eyebrow" number="03">Des tarifs transparents</x-import>
 <x-import component-from-global-scope="BAAM.Heading" level="{{two}}">Un prix clair, ligne par ligne.</x-import>
 <p style="margin: 0; font-size: 16px; line-height: 25px">Le caisson, chaque porte, chaque tablette, chaque tiroir : tout a son prix, affiché avant le devis. Vous ne payez que ce dont votre chantier a besoin, rien de plus.</p>
 <p style="margin: 0; font-size: 14px; line-height: 22px; color: var(--ink-muted)">Tarif professionnel HT 2026. Vantaux, équipements et adaptations dans la grille complète.</p>
@@ -227,7 +245,7 @@ a{color:var(--ink)}a:hover{color:var(--signal)}
 <section id="avantages" style="background: var(--surface-raised); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line)">
 <div class="wrap" style="display: flex; flex-direction: column; gap: 40px; padding-top: clamp(56px,7vw,112px); padding-bottom: clamp(56px,7vw,112px)">
 <div style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
-<x-import component-from-global-scope="BAAM.Eyebrow" number="03">Les quatre piliers</x-import>
+<x-import component-from-global-scope="BAAM.Eyebrow" number="04">Les quatre piliers</x-import>
 <x-import component-from-global-scope="BAAM.Heading" level="{{two}}">Nos engagements pour mieux vous aider dans vos projets.</x-import>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px">
@@ -263,7 +281,7 @@ a{color:var(--ink)}a:hover{color:var(--signal)}
 <section id="en-situation" style="background: var(--surface-raised); border-top: 1px solid var(--line)">
 <div class="wrap" style="display: flex; flex-wrap: wrap; gap: 40px 64px; align-items: center; padding-top: clamp(56px,7vw,104px); padding-bottom: clamp(56px,7vw,104px)">
 <div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
-<x-import component-from-global-scope="BAAM.Eyebrow" number="04">En situation</x-import>
+<x-import component-from-global-scope="BAAM.Eyebrow" number="05">En situation</x-import>
 <x-import component-from-global-scope="BAAM.Heading" level="{{two}}">Choisissez le décor, voyez le résultat.</x-import>
 <p style="margin: 0; font-size: 16px; line-height: 25px">Plus de 200 décors Egger en panneaux 19 mm, classés par famille. Cliquez sur une teinte pour la voir appliquée au dressing.</p>
 <div role="tablist" aria-label="Famille de décors" style="display: flex; gap: 6px; flex-wrap: wrap">
@@ -296,23 +314,6 @@ a{color:var(--ink)}a:hover{color:var(--signal)}
 </div>
 </section>
 
-<section id="commander" data-theme="encre" style="background: var(--surface); color: var(--ink)">
-<div class="wrap" style="display: flex; flex-direction: column; gap: 48px; padding-top: clamp(56px,7vw,112px); padding-bottom: clamp(56px,7vw,112px)">
-<div style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
-<x-import component-from-global-scope="BAAM.Eyebrow" number="05">Commander</x-import>
-<x-import component-from-global-scope="BAAM.Heading" level="{{two}}">Du plan au chantier, en quatre étapes.</x-import>
-</div>
-<ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px">
-<sc-for list="{{steps}}" as="s" hint-placeholder-count="4">
-<li style="display: flex; flex-direction: column; gap: 10px; border-top: 2px solid var(--line-strong); padding-top: 18px">
-<span style="font-family: var(--font-mono); font-size: 13px; color: var(--ink-muted)">{{s.n}}</span>
-<span style="font-size: 18px; line-height: 24px; font-weight: 700">{{s.title}}</span>
-<span style="font-size: 14px; line-height: 22px; color: var(--ink-muted)">{{s.text}}</span>
-</li>
-</sc-for>
-</ol>
-</div>
-</section>
 
 <footer id="espace-pro" style="background: var(--surface); border-top: 1px solid var(--line)">
 <div class="wrap" style="display: flex; flex-wrap: wrap; gap: 48px; justify-content: space-between; padding-top: 56px; padding-bottom: 40px">
