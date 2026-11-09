@@ -231,7 +231,7 @@ a{color:var(--ink)}a:hover{color:var(--signal)}
 <tr>
 <th scope="row" style="font-family: var(--font-mono); font-size: 12px; font-weight: 500">{{r.h}}</th>
 <sc-for list="{{r.cells}}" as="c" hint-placeholder-count="4">
-<td style="font-size: 17px; font-weight: 700">{{c}}</td>
+<td style="font-size: clamp(13px, 0.4vw + 11.5px, 17px); font-weight: 700">{{c}}</td>
 </sc-for>
 </tr>
 </sc-for>
