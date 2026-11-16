@@ -77,10 +77,6 @@ a{color:var(--ink)}a:hover{color:var(--signal)}
 <div style="padding: clamp(12px,2vw,28px); background-color: var(--surface-raised); background-image: linear-gradient(color-mix(in srgb, var(--ink) 6%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--ink) 6%, transparent) 1px, transparent 1px); background-size: 12px 12px; background-position: -1px -1px">
 <div style="position: relative; width: 100%; max-width: {{maxW}}px; margin: 0 auto; aspect-ratio: {{ar}}; container-type: inline-size">
 <svg viewBox="{{vb}}" role="img" aria-label="{{svgLabel}}" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block">
-<sc-if value="{{isFull}}" hint-placeholder-val="{{true}}">
-<line x1="{{ceil.x1}}" y1="0" x2="{{ceil.x2}}" y2="0" style="stroke: var(--ink-muted); stroke-width: 6; stroke-dasharray: 30 20"></line>
-<text x="{{ceil.x1}}" y="-30" style="fill: var(--ink-muted); font-family: var(--font-mono); font-size: 60px">PLAFOND</text>
-</sc-if>
 <line x1="{{ceil.x1}}" y1="{{floorY}}" x2="{{ceil.x2}}" y2="{{floorY}}" style="stroke: var(--ink); stroke-width: 8"></line>
 <sc-for list="{{rects}}" as="r" hint-placeholder-count="12">
 <rect x="{{r.x}}" y="{{r.y}}" width="{{r.w}}" height="{{r.h}}" rx="{{r.rx}}" style="{{r.st}}"></rect>
@@ -467,7 +463,7 @@ class Component extends DCLogic {
     var setCab = function (i, o) { var all = Object.assign({}, st.cabs || {}); all[i] = Object.assign({}, cabs[i], o); set({ cabs: all }); };
 
     /* ---------- géométrie : caisson seul ou caisson + partie haute ---------- */
-    var full = st.full !== false, H = full ? ceiling - 10 : ceiling, P = depth, errors = [];
+    var full = st.full !== false, H = ceiling, P = depth, errors = [];
     if (wall < 300 || wall > 12000) errors.push('Largeur du mur : entre 300 et 12 000 mm.');
     if (widths.some(function (w) { return w < 300 || w > 1200; })) errors.push('Chaque caisson doit faire entre 300 et 1200 mm : ajustez les largeurs ou le nombre de caissons.');
     if (ceiling < 1000 || ceiling > 4000) errors.push('Hauteur du projet : entre 1000 et 4000 mm.');
@@ -632,7 +628,7 @@ class Component extends DCLogic {
       /* cotes générales (noir), à droite, après les cotes orange éventuelles */
       var dx = wall + 110 + (onLeft ? 0 : order.length * COL);
       dimV(dx, 0, FEET, String(FEET)); dimV(dx, FEET, Hc, String(Hc - FEET)); if (split) dimV(dx, Hc, Ht, String(Hs));
-      dimV(dx + BCOL, 0, Ht, String(Ht)); if (full) dimV(dx + 2 * BCOL, 0, ceiling, String(ceiling));
+      dimV(dx + BCOL, 0, Ht, String(Ht));
       var xa = 0; widths.forEach(function (w2) { dimH(Y(0) + 250, xa, xa + w2, String(w2)); xa += w2; });
       dimH(Y(0) + 400, 0, wall, String(wall));
     }
@@ -673,7 +669,7 @@ class Component extends DCLogic {
     var self2 = this;
     var fld = function (k) { return function (e) { var v = e && e.target ? e.target.value : e, o = {}; o[k] = v; self2._f = Object.assign({}, st.f || {}, self2._f || {}, o); }; };
     var confText = function () {
-      var out = ['Projet : ' + wall + ' × ' + Ht + ' × ' + P + ' mm (L × H × P)' + (full ? ', pleine hauteur sous un plafond de ' + ceiling + ' mm' : ''), 'Plinthe : ' + FEET + ' mm', 'Décor : ' + dsel[0] + ' · ' + dsel[1], 'Caissons : ' + n + (split ? ', en 2 parties (caisson ' + Hc + ' + sur-caisson ' + Hs + ')' : ''), ''];
+      var out = ['Projet : ' + wall + ' × ' + Ht + ' × ' + P + ' mm (L × H × P)' + (full ? ', pleine hauteur' : ''), 'Plinthe : ' + FEET + ' mm', 'Décor : ' + dsel[0] + ' · ' + dsel[1], 'Caissons : ' + n + (split ? ', en 2 parties (caisson ' + Hc + ' + sur-caisson ' + Hs + ')' : ''), ''];
       per.forEach(function (L, i) { out.push('C' + (i + 1) + ' · ' + widths[i] + ' mm'); fmtL(L).forEach(function (l) { out.push('  ' + l.ref + '  ' + l.label + '  ' + l.price); }); out.push('  Sous-total ' + eur(subOf(L))); out.push(''); });
       fmtL(glob).forEach(function (l) { out.push(l.ref + '  ' + l.label + '  ' + l.price); });
       out.push('', 'Total : ' + eur(ht) + ' HT · ' + eur(ht * 1.2) + ' TTC' + (hasQuote ? ' (hors usinages à chiffrer)' : ''));
@@ -706,7 +702,6 @@ class Component extends DCLogic {
           var e = function (x) { return String(x).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); };
           var view = function (v, title, ox) {
             var o = '<svg x="' + ox + '" y="' + HEAD + '" width="' + VW + '" height="' + VH + '" viewBox="' + v.vb + '" overflow="visible">';
-            if (v.isFullH) o += '<line x1="-60" y1="0" x2="' + (wall + 60) + '" y2="0" style="stroke: #82888d; stroke-width: 6; stroke-dasharray: 30 20"/>';
             o += '<line x1="-60" y1="' + v.ceilY + '" x2="' + (wall + 60) + '" y2="' + v.ceilY + '" style="stroke: #14171a; stroke-width: 8"/>';
             v.rects.forEach(function (r) { o += '<rect x="' + r.x + '" y="' + r.y + '" width="' + r.w + '" height="' + r.h + '" rx="' + r.rx + '" style="' + e(r.st) + '"/>'; });
             v.lines.filter(function (l) { return l.st !== 'stroke: var(--signal); stroke-width: 6'; }).forEach(function (l) { o += '<line x1="' + l.x1 + '" y1="' + l.y1 + '" x2="' + l.x2 + '" y2="' + l.y2 + '" style="' + e(l.st) + '"/>'; });
@@ -739,7 +734,7 @@ class Component extends DCLogic {
       steps: STEPS.map(function (l, k) { return { n: '0' + (k + 1), label: l, cur: k === step ? 'step' : 'false', bar: k === step ? 'var(--signal)' : 'transparent', fg: k === step ? 'var(--ink)' : 'var(--ink-muted)', go: function () { set({ step: k }); } }; }),
       notRecap: step !== 3, isStep0: step === 0, isStep1: step === 1, isStep2: step === 2, isStep4: step === 3,
       wall: wall, ceiling: ceiling, depth: depth, isFull: full, fullMark: full ? '✓' : '', fullOn: full ? 'true' : 'false', toggleFull: function () { set({ full: !full }); },
-      fullNote: full ? 'Le meuble monte jusqu’au plafond, avec 10 mm de jeu : il fait ' + mm(H) + ' de haut.' : 'Le meuble fait la hauteur du projet, en un seul caisson (2500 mm maximum).',
+      fullNote: full ? 'Le meuble fait ' + mm(H) + ' de haut, en caisson + sur-caisson pour pouvoir le redresser dans la pièce.' : 'Le meuble fait la hauteur du projet, en un seul caisson (2500 mm maximum).',
       setWall: num('wall', 300, 12000), setCeiling: num('ceiling', 1000, 4000), setDepth: num('depth', 400, 650), feet: FEET, setFeet: num('feet', 50, 200),
       showSplit: split, splitText: 'Votre meuble fait ' + mm(Ht) + ' : il est fabriqué en un caisson de ' + mm(Hc) + ' et une partie haute de ' + mm(Hs) + ', pour passer les portes et se redresser dans la pièce. Une fois posés, ils forment un seul meuble.',
       decors: (QUICK.indexOf(dsel[0]) >= 0 ? QUICK : [dsel[0]].concat(QUICK.slice(0, QUICK.length - 1))).map(function (c) { return swOf(DMAP[c], 36); }),
@@ -793,13 +788,13 @@ class Component extends DCLogic {
       globalRows: fmtL(glob), hasQuote: hasQuote,
       hasErrors: errors.length > 0, errorText: errors.join(' '),
       summary: 'L ' + wall + ' × H ' + Ht + ' × P ' + P + ' mm · ' + n + ' caisson' + (n > 1 ? 's' : ''),
-      vb: '-840 -120 ' + (wall + 2640) + ' ' + (ceiling + 580), ceil: { x1: -60, x2: wall + 60 }, floorY: ceiling,
+      vb: '-840 -120 ' + (wall + 2320) + ' ' + (ceiling + 580), ceil: { x1: -60, x2: wall + 60 }, floorY: ceiling,
       svgLabel: 'Élévation du meuble : ' + n + ' caissons, ' + wall + ' mm de large, ' + Ht + ' mm de haut',
       rects: rects, lines: lines, svgTexts: texts, isFullH: full, ceilY: ceiling,
-      labels: (function () { var vx = -840, vy = -120, vw = wall + 2640, vh = ceiling + 580; return texts.map(function (t) {
+      labels: (function () { var vx = -840, vy = -120, vw = wall + 2320, vh = ceiling + 580; return texts.map(function (t) {
         var m = /fill:\s*([^;]+)/.exec(t.st), fz = /font-size:\s*(\d+)/.exec(t.st), fw = /font-weight:\s*(\d+)/.exec(t.st), big = fz && +fz[1] >= 70;
         return { s: t.s, l: ((t.x - vx) / vw * 100).toFixed(3), t: ((t.y - vy) / vh * 100).toFixed(3), tf: 'translate(' + (t.a === 'start' ? '0' : t.a === 'end' ? '-100%' : '-50%') + ', -80%)', fs: big ? 14 : 12, fsv: big ? 'max(8px, min(14px, 1.75cqw))' : 'max(7px, min(12px, 1.5cqw))', fw: fw ? fw[1] : 400, col: m ? m[1].trim() : 'var(--ink)' }; }); })(),
-      ar: (wall + 2640) + ' / ' + (ceiling + 580), maxW: Math.round(640 * (wall + 2640) / (ceiling + 580)),
+      ar: (wall + 2320) + ' / ' + (ceiling + 580), maxW: Math.round(640 * (wall + 2320) / (ceiling + 580)),
       hits: errors.length ? [] : (function () { var x0 = 0, out = []; widths.forEach(function (w, i) {
         if (split) { out.push({ x: x0, y: Y(Ht + 24), w: w, h: Hs + 24, label: 'C' + (i + 1) + ' · aménager le sur-caisson', pick: function () { set({ sel: i, part: 'haut', step: 2 }); } }); out.push({ x: x0, y: Y(Hc), w: w, h: Hc + 220, label: 'C' + (i + 1) + ' · aménager le caisson', pick: function () { set({ sel: i, part: 'bas', step: 2 }); } }); }
         else out.push({ x: x0, y: Y(Ht + 24), w: w, h: Ht + 24 + 220, label: 'C' + (i + 1) + ' · aménager ce caisson', pick: function () { set({ sel: i, part: 'bas', step: 2 }); } });
