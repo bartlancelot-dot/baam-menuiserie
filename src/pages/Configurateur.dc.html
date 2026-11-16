@@ -255,15 +255,18 @@ a{color:var(--ink)}a:hover{color:var(--signal)}
 <span style="flex: 1; font-size: 14px; font-weight: 600">Penderie <span style="font-weight: 400; font-size: 12px; color: var(--ink-muted)">tube alu anti-bruit</span></span>
 <button type="button" class="abtn" onClick="{{z.lessPend}}" aria-label="Une penderie de moins" style="background: transparent; color: var(--ink); width: 36px; height: 36px; padding: 0; cursor: pointer; font-size: 18px">−</button>
 <span style="font-size: 18px; font-weight: 700; min-width: 24px; text-align: center; font-variant-numeric: tabular-nums">{{z.pend}}</span>
-<button type="button" class="abtn" onClick="{{z.morePend}}" aria-label="Une penderie de plus" style="background: transparent; color: var(--ink); width: 36px; height: 36px; padding: 0; cursor: pointer; font-size: 18px">+</button>
+<button type="button" class="abtn" onClick="{{z.morePend}}" aria-label="Une penderie de plus" style="background: transparent; color: var(--ink); width: 36px; height: 36px; padding: 0; cursor: pointer; font-size: 18px; opacity: {{z.pendPlusOp}}">+</button>
 </div>
 </sc-if>
 <div style="display: flex; align-items: center; gap: 12px">
 <span style="flex: 1; font-size: 14px; font-weight: 600">Tablettes <span style="font-weight: 400; font-size: 12px; color: var(--ink-muted)">réglables</span></span>
 <button type="button" class="abtn" onClick="{{z.lessTab}}" aria-label="Une tablette de moins" style="background: transparent; color: var(--ink); width: 36px; height: 36px; padding: 0; cursor: pointer; font-size: 18px">−</button>
 <span style="font-size: 18px; font-weight: 700; min-width: 24px; text-align: center; font-variant-numeric: tabular-nums">{{z.tab}}</span>
-<button type="button" class="abtn" onClick="{{z.moreTab}}" aria-label="Une tablette de plus" style="background: transparent; color: var(--ink); width: 36px; height: 36px; padding: 0; cursor: pointer; font-size: 18px">+</button>
+<button type="button" class="abtn" onClick="{{z.moreTab}}" aria-label="Une tablette de plus" style="background: transparent; color: var(--ink); width: 36px; height: 36px; padding: 0; cursor: pointer; font-size: 18px; opacity: {{z.tabPlusOp}}">+</button>
 </div>
+<sc-if value="{{z.limitNote}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 12px; line-height: 18px; color: var(--ink-muted)">{{z.limitNote}}</span>
+</sc-if>
 <sc-if value="{{z.showOrdre}}" hint-placeholder-val="{{false}}">
 <div class="seg">
 <sc-for list="{{z.ordreOpts}}" as="o" hint-placeholder-count="2">
@@ -483,7 +486,9 @@ class Component extends DCLogic {
 
     /* ---------- prix ---------- */
     var SPAN = 900;
-    var HANG1 = 1100, HANG2 = 880, MAXD = 450;
+    var HANG1 = 1100, HANG2 = 880, MAXD = 450, MINC = 120;
+    var hNeedOf = function (p) { return p === 2 ? 2 * HANG2 + PANEL : p === 1 ? HANG1 : 0; };
+    var maxTabOf = function (p, H) { var m = p ? Math.floor((H - hNeedOf(p)) / (MINC + PANEL)) : Math.floor((H + PANEL) / (MINC + PANEL)) - 1; return Math.max(0, Math.min(10, m)); };
     var zoneLayout = function (z, bot, top) {
       var hNeed = z.pend === 2 ? 2 * HANG2 + PANEL : z.pend === 1 ? HANG1 : 0, L = { shelves: [], cases: [], hangs: [] };
       L.hregs = [];
@@ -586,7 +591,7 @@ class Component extends DCLogic {
           if (view !== 'fac') parts2.forEach(function (pp) { var b1 = pp[0] === FEET ? FEET + 30 : pp[0] + 30, t1 = pp[1] - 30;
             if (nl === 2) Ln(x + w / 2, Y(t1), x + w / 2, Y(b1), DSH);
             else Ln(x + w - 40, Y(t1), x + w - 40, Y(b1), DSH); });
-          if (view === 'fac') parts2.forEach(function (pp) { var lw = (w - GAP * (nl + 1)) / nl, b0 = pp[0] + GAP, t0 = pp[1] - GAP;
+          if (view === 'fac') parts2.forEach(function (pp) { var lw = (w - GAP * (nl + 1)) / nl, b0 = pp[0] === FEET ? 10 : pp[0] + GAP, t0 = pp[1] - GAP;
             for (var q = 0; q < nl; q++) { var lx = x + GAP + q * (lw + GAP);
               var hx0 = nl === 2 ? (q === 0 ? lx + lw - 60 : lx + 60) : lx + lw - 60, hx = hx0, hy = pp[2] === 'h' ? b0 + 80 : Math.min(t0 - 80, 1100), hl = Math.min(300, (t0 - b0) * 0.5);
               fr.push({ x: Math.round(lx), y: Math.round(Y(t0)), w: Math.round(lw), h: Math.round(t0 - b0), hx: Math.round(hx), hy1: Math.round(Y(hy + hl)), hy2: Math.round(Y(hy)) });
@@ -600,7 +605,7 @@ class Component extends DCLogic {
       var DST = 'stroke: var(--ink); stroke-width: 6', OST = 'stroke: var(--signal); stroke-width: 6';
       var tick = function (x1, y1, stl) { Ln(x1 - 28, y1 + 28, x1 + 28, y1 - 28, stl || DST); };
       var dimV = function (dx, h0, h1, lab, orange, left) { var stl = orange ? OST : DST; Ln(dx, Y(h0), dx, Y(h1), stl); tick(dx, Y(h0), stl); tick(dx, Y(h1), stl);
-        if (h1 - h0 >= 70) T(left ? dx - 24 : dx + 24, Y((h0 + h1) / 2) + 20, lab, left ? 'end' : 'start', 'fill: ' + (orange ? 'var(--signal)' : 'var(--ink)') + '; font-family: var(--font-mono); font-size: 58px; font-weight: ' + (orange ? 700 : 500)); };
+        if (h1 - h0 >= 100) T(left ? dx - 24 : dx + 24, Y((h0 + h1) / 2) + 20, lab, left ? 'end' : 'start', 'fill: ' + (orange ? 'var(--signal)' : 'var(--ink)') + '; font-family: var(--font-mono); font-size: 58px; font-weight: ' + (orange ? 700 : 500)); };
       var dimH = function (dy, x0, x1, lab) { Ln(x0, dy, x1, dy, DST); tick(x0, dy); tick(x1, dy); T((x0 + x1) / 2, dy - 22, lab, 'middle', 'fill: var(--ink); font-family: var(--font-mono); font-size: 58px; font-weight: 500'); };
       /* cotes de l'aménagement du caisson sélectionné (orange), côté le plus proche */
       var xs = 0; for (var q2 = 0; q2 < sel; q2++) xs += widths[q2];
@@ -610,7 +615,7 @@ class Component extends DCLogic {
         Lz.hregs.forEach(function (hr) { if (z.pend === 2) { var mid = hr[0] + (hr[1] - hr[0]) / 2; seg.push([hr[0], mid]); seg.push([mid + PANEL, hr[1]]); } else seg.push(hr); });
         return seg; });
       if (eP.auto) zl = [zl[0]];
-      var order = onLeft ? zl : zl.slice().reverse(), COL = 200;
+      var order = onLeft ? zl : zl.slice().reverse(), COL = 420, BCOL = 320;
       order.forEach(function (seg, k) { var cx = onLeft ? -110 - k * COL : wall + 110 + k * COL;
         /* cotes au nu extérieur, coupées au milieu des tablettes : leur somme = cote noire */
         var sg2 = seg.filter(function (a) { return a[1] - a[0] > 20; }).sort(function (a, b) { return a[0] - b[0]; }), bd = [pb0 - PANEL];
@@ -619,11 +624,15 @@ class Component extends DCLogic {
         var raw = []; for (var v = 0; v + 1 < bd.length; v++) raw.push(bd[v + 1] - bd[v]);
         var labs = raw.slice(), g0 = 0;
         for (var v2 = 1; v2 <= raw.length; v2++) { var grp = raw.slice(g0, v2 + 1); if (v2 === raw.length || Math.max.apply(null, grp) - Math.min.apply(null, grp) > 1) { var cur = raw.slice(g0, v2), mean = Math.round(cur.reduce(function (x1, x2) { return x1 + x2; }, 0) / cur.length); for (var g = g0; g < v2; g++) labs[g] = mean; g0 = v2; } }
-        for (var v3 = 0; v3 + 1 < bd.length; v3++) dimV(cx, bd[v3], bd[v3 + 1], String(labs[v3]), true, onLeft); });
+        var g3 = 0;
+        for (var v3 = 1; v3 <= labs.length; v3++) { if (v3 === labs.length || labs[v3] !== labs[g3]) { var cnt = v3 - g3;
+            dimV(cx, bd[g3], bd[v3], cnt > 1 ? cnt + '×' + labs[g3] : String(labs[g3]), true, onLeft);
+            for (var g4 = g3 + 1; g4 < v3; g4++) tick(cx, Y(bd[g4]), OST);
+            g3 = v3; } } });
       /* cotes générales (noir), à droite, après les cotes orange éventuelles */
       var dx = wall + 110 + (onLeft ? 0 : order.length * COL);
       dimV(dx, 0, FEET, String(FEET)); dimV(dx, FEET, Hc, String(Hc - FEET)); if (split) dimV(dx, Hc, Ht, String(Hs));
-      dimV(dx + COL, 0, Ht, String(Ht)); if (full) dimV(dx + 2 * COL, 0, ceiling, String(ceiling));
+      dimV(dx + BCOL, 0, Ht, String(Ht)); if (full) dimV(dx + 2 * BCOL, 0, ceiling, String(ceiling));
       var xa = 0; widths.forEach(function (w2) { dimH(Y(0) + 250, xa, xa + w2, String(w2)); xa += w2; });
       dimH(Y(0) + 400, 0, wall, String(wall));
     }
@@ -642,14 +651,18 @@ class Component extends DCLogic {
       var z = pInt.sep ? pInt.zones[k] : (effP.auto ? pInt.zones[0] : pInt.zones[0]), Lz = zoneLayout(z, pBot, pTop);
       var zwv = Math.round((widths[sel] - 2 * PANEL - (effP.sep ? PANEL : 0)) / (effP.sep ? 2 : 1));
       var upd = function (fn) { setP(function (it) { fn(it.zones[pInt.sep ? k : 0]); }); };
+      var zH = pTop - pBot, tabMax = maxTabOf(z.pend, zH), canPend2 = !isHautP && z.pend < 2 && hNeedOf(z.pend + 1) <= zH;
       var segs = [];
       Lz.cases.forEach(function (cs, q) { var hgt = Math.round(cs[1] - cs[0]), ok = hgt <= MAXD, on = !!Lz.tir[q]; segs.push({ y: cs[0], h: hgt, label: on ? 'Tiroir' : (ok ? 'Ouvert' : 'Ouvert · trop haute pour un tiroir'), mm: hgt + ' mm', bg: on ? fill : 'var(--surface)', fg: on && dark ? '#fff' : 'var(--ink)', bd: ok ? '1.5px dashed var(--ink)' : '1px solid var(--line)', cur: ok ? 'pointer' : 'default', flex: Math.max(28, hgt / 8), toggle: ok ? function () { upd(function (zz) { var t = (zz.tir || []).slice(); t[q] = !t[q]; zz.tir = t; }); } : function () {} }); });
       (Lz.hregs || []).forEach(function (hr) { segs.push({ y: hr[0], h: hr[1] - hr[0], label: 'Penderie', mm: '', bg: 'repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 10px)', fg: 'var(--ink-muted)', bd: '1px solid var(--line)', cur: 'default', flex: Math.max(40, (hr[1] - hr[0]) / 8), toggle: function () {} }); });
       segs.sort(function (a2, b3) { return b3.y - a2.y; });
       var okIdx = []; Lz.cases.forEach(function (cs, q) { if (cs[1] - cs[0] <= MAXD) okIdx.push(q); });
       return { title: title, width: zwv + ' mm', pend: z.pend, tab: z.tab, canPend: !isHautP,
-        lessPend: function () { upd(function (zz) { zz.pend = Math.max(0, zz.pend - 1); }); }, morePend: function () { upd(function (zz) { zz.pend = Math.min(2, zz.pend + 1); }); },
-        lessTab: function () { upd(function (zz) { zz.tab = Math.max(0, zz.tab - 1); }); }, moreTab: function () { upd(function (zz) { zz.tab = Math.min(10, zz.tab + 1); }); },
+        lessPend: function () { upd(function (zz) { zz.pend = Math.max(0, zz.pend - 1); }); },
+        morePend: function () { if (!canPend2) return; upd(function (zz) { zz.pend = zz.pend + 1; zz.tab = Math.min(zz.tab, maxTabOf(zz.pend, zH)); }); },
+        pendPlusOp: canPend2 ? 1 : 0.35, tabPlusOp: z.tab < tabMax ? 1 : 0.35,
+        limitNote: z.tab >= tabMax && tabMax === 0 && z.pend ? 'Pas de tablette possible : ' + (z.pend === 2 ? 'la double penderie' : 'la penderie') + ' prend toute la hauteur.' : z.tab >= tabMax && tabMax < 10 ? 'Maximum atteint : ' + tabMax + ' tablette' + (tabMax > 1 ? 's' : '') + (z.pend ? ' avec ' + (z.pend === 2 ? 'une double penderie' : 'une penderie') : '') + ', pour garder des cases de 12 cm au moins.' : (!canPend2 && z.pend < 2 && !isHautP ? (hNeedOf(z.pend + 1) > zH ? 'Pas assez de hauteur pour une penderie de plus.' : '') : ''),
+        lessTab: function () { upd(function (zz) { zz.tab = Math.max(0, zz.tab - 1); }); }, moreTab: function () { if (z.tab >= tabMax) return; upd(function (zz) { zz.tab = zz.tab + 1; }); },
         showOrdre: z.pend > 0 && z.tab > 0,
         ordreOpts: [['haut', 'Penderie en haut'], ['bas', 'Penderie en bas']].map(function (o) { var b2 = segBtn((z.ordre || 'bas') === o[0]); return { label: o[1], on: b2.on, bg: b2.bg, fg: b2.fg, pick: function () { upd(function (zz) { zz.ordre = o[0]; }); } }; }),
         hasCases: okIdx.length > 0, segs: segs,
@@ -780,13 +793,13 @@ class Component extends DCLogic {
       globalRows: fmtL(glob), hasQuote: hasQuote,
       hasErrors: errors.length > 0, errorText: errors.join(' '),
       summary: 'L ' + wall + ' × H ' + Ht + ' × P ' + P + ' mm · ' + n + ' caisson' + (n > 1 ? 's' : ''),
-      vb: '-470 -120 ' + (wall + 1500) + ' ' + (ceiling + 580), ceil: { x1: -60, x2: wall + 60 }, floorY: ceiling,
+      vb: '-840 -120 ' + (wall + 2640) + ' ' + (ceiling + 580), ceil: { x1: -60, x2: wall + 60 }, floorY: ceiling,
       svgLabel: 'Élévation du meuble : ' + n + ' caissons, ' + wall + ' mm de large, ' + Ht + ' mm de haut',
       rects: rects, lines: lines, svgTexts: texts, isFullH: full, ceilY: ceiling,
-      labels: (function () { var vx = -470, vy = -120, vw = wall + 1500, vh = ceiling + 580; return texts.map(function (t) {
+      labels: (function () { var vx = -840, vy = -120, vw = wall + 2640, vh = ceiling + 580; return texts.map(function (t) {
         var m = /fill:\s*([^;]+)/.exec(t.st), fz = /font-size:\s*(\d+)/.exec(t.st), fw = /font-weight:\s*(\d+)/.exec(t.st), big = fz && +fz[1] >= 70;
         return { s: t.s, l: ((t.x - vx) / vw * 100).toFixed(3), t: ((t.y - vy) / vh * 100).toFixed(3), tf: 'translate(' + (t.a === 'start' ? '0' : t.a === 'end' ? '-100%' : '-50%') + ', -80%)', fs: big ? 14 : 12, fsv: big ? 'max(8px, min(14px, 1.75cqw))' : 'max(7px, min(12px, 1.5cqw))', fw: fw ? fw[1] : 400, col: m ? m[1].trim() : 'var(--ink)' }; }); })(),
-      ar: (wall + 1500) + ' / ' + (ceiling + 580), maxW: Math.round(640 * (wall + 1500) / (ceiling + 580)),
+      ar: (wall + 2640) + ' / ' + (ceiling + 580), maxW: Math.round(640 * (wall + 2640) / (ceiling + 580)),
       hits: errors.length ? [] : (function () { var x0 = 0, out = []; widths.forEach(function (w, i) {
         if (split) { out.push({ x: x0, y: Y(Ht + 24), w: w, h: Hs + 24, label: 'C' + (i + 1) + ' · aménager le sur-caisson', pick: function () { set({ sel: i, part: 'haut', step: 2 }); } }); out.push({ x: x0, y: Y(Hc), w: w, h: Hc + 220, label: 'C' + (i + 1) + ' · aménager le caisson', pick: function () { set({ sel: i, part: 'bas', step: 2 }); } }); }
         else out.push({ x: x0, y: Y(Ht + 24), w: w, h: Ht + 24 + 220, label: 'C' + (i + 1) + ' · aménager ce caisson', pick: function () { set({ sel: i, part: 'bas', step: 2 }); } });

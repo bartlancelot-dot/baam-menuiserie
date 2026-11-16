@@ -64,7 +64,7 @@
       var r = render(n, scopes, parentTag, i);
       if (Array.isArray(r)) out.push.apply(out, r); else if (r != null) out.push(r);
     });
-    return out.map(function (el, i) { return R.isValidElement(el) && el.key == null ? R.cloneElement(el, { key: i }) : el; });
+    return out.map(function (el, i) { return R.isValidElement(el) && el.key == null ? R.cloneElement(el, { key: 'n' + i }) : el; });
   }
 
   function render(n, scopes, parentTag, idx) {
@@ -78,7 +78,7 @@
       var list = resolve(a.list || '', scopes) || [], as = a.as || 'item', out = [];
       (Array.isArray(list) ? list : []).forEach(function (item, k) {
         var sc = {}; sc[as] = item;
-        out.push(h(R.Fragment, { key: k }, renderList(kids, scopes.concat([sc]), parentTag)));
+        out.push(h(R.Fragment, { key: 'f' + idx + '_' + k }, renderList(kids, scopes.concat([sc]), parentTag)));
       });
       return out;
     }
