@@ -330,6 +330,7 @@ a{color:var(--ink)}a:hover{color:var(--signal)}
 </sc-if>
 <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border-top: 2px solid var(--line-strong); padding-top: 10px"><b>Total HT</b><b style="font-size: 22px; font-variant-numeric: tabular-nums">{{totalHt}}</b></div>
 <div style="display: flex; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--ink-muted)"><span>Total TTC</span><span style="font-variant-numeric: tabular-nums">{{totalTtc}}</span></div>
+<p style="margin: 0; font-size: 12px; line-height: 18px; color: var(--ink-muted)">Prix estimé : le devis définitif vous est envoyé avec le BAT, après vérification de vos cotes et de vos photos.</p>
 </aside>
 <div id="bat" class="bat-form" style="flex: 2 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
 <div style="display: flex; flex-direction: column; gap: 6px">
@@ -373,7 +374,7 @@ a{color:var(--ink)}a:hover{color:var(--signal)}
 <div class="wrap" style="display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; padding-top: 14px; padding-bottom: 14px">
 <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap">
 <span style="font-size: 30px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums">{{totalHt}}</span>
-<span style="font-size: 14px; font-weight: 600; color: var(--ink-muted)">HT · {{totalTtc}} TTC · prêts 72 h après BAT</span>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; font-weight: 600; color: var(--ink-muted)">HT · {{totalTtc}} TTC · prêts 72 h après BAT</span><span style="font-size: 12px; line-height: 16px; color: var(--ink-muted)">Prix estimé : vous recevez le devis définitif avec votre BAT.</span></span>
 </div>
 <div style="display: flex; gap: 10px">
 <sc-if value="{{canBack}}" hint-placeholder-val="{{false}}">
