@@ -372,13 +372,13 @@ a{color:var(--ink)}a:hover{color:var(--signal)}
 </div>
 </section>
 
-<section data-theme="encre" style="background: var(--surface); color: var(--ink); position: sticky; bottom: 0">
+<section class="cfg-bar" data-theme="encre" style="background: var(--surface); color: var(--ink); position: sticky; bottom: 0">
 <div class="wrap" style="display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; padding-top: 14px; padding-bottom: 14px">
 <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap">
 <span style="font-size: 30px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums">{{totalHt}}</span>
 <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; font-weight: 600; color: var(--ink-muted)">HT · {{totalTtc}} TTC · prêts 72 h après BAT</span><span style="font-size: 12px; line-height: 16px; color: var(--ink-muted)">Prix estimé : vous recevez le devis définitif avec votre BAT.</span></span>
 </div>
-<div style="display: flex; gap: 10px">
+<div class="cfg-actions" style="display: flex; gap: 10px">
 <sc-if value="{{canBack}}" hint-placeholder-val="{{false}}">
 <button type="button" class="abtn" onClick="{{back}}" style="background: transparent; color: var(--ink); border-color: var(--ink); cursor: pointer">Retour</button>
 </sc-if>

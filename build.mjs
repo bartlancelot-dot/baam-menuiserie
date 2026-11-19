@@ -110,6 +110,7 @@ for (const p of PAGES) {
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="/vendor/tokens.css">
 <link rel="stylesheet" href="/vendor/bundle.css">
+<style>/* place pour le badge « Powered by Netlify » (bas droite, ~210 × 48 px) */@media (min-width:720px){.cfg-actions{margin-right:220px}}@media (max-width:719px){.cfg-bar>div{padding-bottom:72px!important}}</style>
 ${helmet.replace(/<link[^>]*fonts\.googleapis[^>]*>\s*/g, '').trim()}
 </head>
 <body>
